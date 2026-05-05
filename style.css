@@ -1,12 +1,41 @@
 :root {
-    --primary: #045bb6; /* Match the exact blue */
-    --primary-light: #dceaff; /* Light blue bg for selected role */
-    --bg-main: #d7e1ec;
-    --card-bg: #ffffff;
-    --text-dark: #111827;
-    --text-muted: #475569;
-    --border-color: #cbd5e1;
-    --input-bg: #fafafa;
+    --primary: #2563eb;
+    --primary-light: rgba(37, 99, 235, 0.1);
+    --bg-main: #f0f2f5;
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --glass-bg: rgba(255, 255, 255, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --border-color: rgba(226, 232, 240, 0.8);
+    --input-bg: rgba(255, 255, 255, 0.5);
+    --loader-bg: #f3f6f9;
+    --backdrop-blur: blur(12px);
+}
+
+[data-theme='dark'] {
+    --bg-main: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --glass-bg: rgba(15, 23, 42, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-dark: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: rgba(51, 65, 85, 0.5);
+    --input-bg: rgba(15, 23, 42, 0.4);
+    --primary-light: rgba(37, 99, 235, 0.2);
+    --loader-bg: #0f172a;
+    --backdrop-blur: blur(16px);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    position: fixed; /* Prevents bouncing on mobile */
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    scroll-behavior: smooth;
 }
 
 * {
@@ -14,73 +43,189 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
-    background: linear-gradient(135deg, #e4edf5 0%, #cbdceb 50%, #b2c5da 100%);
-    min-height: 100vh;
+    background: var(--bg-main);
+    background-image: linear-gradient(135deg, var(--bg-main) 0%, var(--border-color) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
     position: relative;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1001;
+    color: var(--text-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.05);
+}
+
+.theme-toggle i {
+    font-size: 18px;
 }
 
 /* Background blur shape */
 .background-blur {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 40%),
-                radial-gradient(ellipse at 70% 70%, rgba(255, 255, 255, 0.4) 0%, transparent 40%);
-    filter: blur(80px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-main);
     z-index: 0;
+    overflow: hidden;
+}
+
+.background-blur::before,
+.background-blur::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), #3b82f6);
+    filter: blur(80px);
+    opacity: 0.15;
+    z-index: -1;
+    animation: move 20s infinite alternate ease-in-out;
+}
+
+.background-blur::before {
+    top: -100px;
+    left: -100px;
+}
+
+.background-blur::after {
+    bottom: -100px;
+    right: -100px;
+    animation-delay: -10s;
+}
+
+@keyframes move {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(100px, 100px); }
 }
 
 .login-container {
     background: var(--card-bg);
+    backdrop-filter: var(--backdrop-blur);
+    -webkit-backdrop-filter: var(--backdrop-blur);
     width: 100%;
-    max-width: 380px;
-    padding: 36px 32px;
+    max-width: 400px;
+    max-height: 95vh;
+    padding: 24px 20px;
     border-radius: 24px;
-    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
     z-index: 1;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+@media (min-height: 700px) {
+    .login-container {
+        padding: 32px 24px;
+    }
+}
+
+.login-container::-webkit-scrollbar {
+    display: none;
 }
 
 /* Logo */
 .logo-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 12px; /* Reduced from 20px */
+}
+
+@media (min-height: 700px) {
+    .logo-container {
+        margin-bottom: 20px;
+    }
 }
 
 .logo-box {
-    width: 54px;
-    height: 54px;
-    background-color: #1976d2; /* Vibrant blue logo box */
-    border-radius: 14px;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border-radius: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: 800;
+    box-shadow: 0 8px 16px rgba(37, 99, 235, 0.2);
+    perspective: 1000px;
+    animation: logoFlip 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    transform-style: preserve-3d;
+}
+
+@keyframes logoFlip {
+    0%, 100% { transform: rotateY(0deg); }
+    45% { transform: rotateY(180deg); }
+    55% { transform: rotateY(180deg); }
+    95% { transform: rotateY(360deg); }
+}
+
+/* Spinner Speed Improvement */
+.fa-spin {
+    animation: fa-spin 1s linear infinite !important;
 }
 
 /* Header */
 .header {
     text-align: center;
-    margin-bottom: 32px;
+    margin-bottom: 20px; /* Reduced from 24px */
+}
+
+@media (min-height: 700px) {
+    .header {
+        margin-bottom: 24px;
+    }
 }
 
 .header h1 {
     font-size: 22px;
     font-weight: 600;
     color: var(--text-dark);
-    margin-bottom: 6px;
+    margin-bottom: 4px; /* Reduced from 6px */
     letter-spacing: -0.5px;
 }
 
@@ -93,7 +238,7 @@ body {
 .role-selector {
     display: flex;
     gap: 12px;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
 }
 
 .role-card {
@@ -234,6 +379,47 @@ input::-ms-clear {
 }
 
 /* Login Button */
+.theme-select {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-dark);
+    background-color: var(--card-bg);
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: all 0.2s ease;
+}
+
+.theme-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.theme-select option {
+    background-color: var(--card-bg);
+    color: var(--text-dark);
+    padding: 12px;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: transform 0.2s ease;
+}
+
+.theme-select:focus + .select-arrow {
+    transform: rotate(180deg);
+    color: var(--primary);
+}
+
 .login-btn {
     width: 100%;
     padding: 14px;
@@ -248,10 +434,23 @@ input::-ms-clear {
     justify-content: center;
     align-items: center;
     gap: 8px;
-    margin-top: 24px;
+    margin-top: 16px;
     transition: background-color 0.2s;
 }
 
 .login-btn:hover {
     background-color: #034891;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 16px; /* Reduced from 20px */
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+@media (min-height: 700px) {
+    .form-footer {
+        margin-top: 24px;
+    }
 }

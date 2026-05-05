@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="student_dashboard.css">
+    <script src="theme-logic.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -22,8 +23,11 @@
                 <span style="font-weight: 800; background: linear-gradient(135deg, #2563eb, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px;">RN-</span>
                     <span style="font-weight: 300; color: #64748b; letter-spacing: 0;">TECH</span>
                 </div>
-                <div style="display: flex; justify-content: flex-end;">
-                    <button class="logout-btn" id="logoutBtn" title="Logout" style="margin: 0;">
+                <div style="display: flex; justify-content: flex-end; gap: 8px; align-items: center;">
+                    <div class="theme-toggle-header" id="themeToggle" style="cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); border-radius: 8px; color: var(--text-dark);">
+                        <i class="fa-solid fa-moon"></i>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn" title="Logout" style="margin: 0; display: flex; align-items: center; justify-content: center;">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>

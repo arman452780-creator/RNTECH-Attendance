@@ -1,26 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>RN-TECH</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="theme-logic.js"></script>
 </head>
+
 <body>
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fa-solid fa-moon"></i>
+    </div>
     <div class="background-blur"></div>
+
+    <!-- Initial Loading Screen -->
+    <div id="initialLoader"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--loader-bg); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 20px;">
+            <span
+                style="font-size: 42px; font-weight: 800; background: linear-gradient(135deg, #2563eb, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px;">RN</span>
+            <span style="font-size: 42px; font-weight: 300; color: #64748b; letter-spacing: 0;">TECH</span>
+        </div>
+        <div style="color: #64748b; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px;">
+            <i class="fa-solid fa-spinner fa-spin" style="color: #2563eb;"></i>
+            Verifying Session...
+        </div>
+    </div>
+
     <div class="login-container">
         <!-- Logo -->
         <div class="logo-container">
-            <div class="logo">
+            <div class="logo-box">
+                RN
             </div>
         </div>
 
         <!-- Header -->
         <div class="header">
             <h1 style="display: flex; align-items: center; justify-content: center; gap: 0;">
-                <span style="font-weight: 800; background: linear-gradient(135deg, #2563eb, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px;">RN</span>
+                <span
+                    style="font-weight: 800; background: linear-gradient(135deg, #2563eb, #3b82f6); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px;">RN
+                    -</span>
                 <span style="font-weight: 300; color: #64748b; letter-spacing: 0;">TECH</span>
             </h1>
             <p>Sign in to your account</p>
@@ -44,7 +72,7 @@
                 <label>Email Address</label>
                 <div class="input-wrapper">
                     <i class="fa-regular fa-envelope icon"></i>
-                    <input type="email" placeholder="name@institute.edu" required id="emailInput">
+                    <input type="email" placeholder="Enter email" required id="emailInput">
                 </div>
             </div>
 
@@ -52,26 +80,27 @@
             <div class="form-group">
                 <div class="label-row">
                     <label>Password</label>
-                    <a href="#" class="forgot-link">Forgot password?</a>
+                    <a href="#" class="forgot-link" id="forgotPassword">Forgot password?</a>
                 </div>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-lock icon"></i>
-                    <input type="password" placeholder="••••••••" required id="passwordInput" style="padding-right: 40px;">
+                    <input type="password" placeholder="••••••••" required id="passwordInput"
+                        style="padding-right: 40px;">
                     <i class="fa-solid fa-eye eye-icon" id="togglePassword"></i>
                 </div>
             </div>
 
             <!-- Course Input (Hidden for Login, shown for Signup) -->
             <div class="form-group" id="courseField" style="display: none;">
-                <label>Select Course</label>
+                <label>SELECT COURSE</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-book-open icon"></i>
-                    <select id="courseInput" style="width: 100%; padding: 12px 14px 12px 40px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 15px; color: var(--text-dark); background-color: var(--card-bg); outline: none; cursor: pointer; -webkit-appearance: none; appearance: none;">
-                        <option value="" disabled selected>Select Course</option>
+                    <select id="courseInput" class="theme-select">
+                        <option value="" disabled selected>SELECT COURSE</option>
                         <option value="ADCA">ADCA</option>
                         <option value="DCA">DCA</option>
                     </select>
-                    <i class="fa-solid fa-chevron-down" style="position: absolute; right: 14px; font-size: 12px; color: #94a3b8; pointer-events: none;"></i>
+                    <i class="fa-solid fa-chevron-down select-arrow"></i>
                 </div>
             </div>
 
@@ -82,9 +111,10 @@
         </form>
 
         <!-- Auth Toggle -->
-        <div class="form-footer" style="text-align: center; margin-top: 24px; font-size: 14px; color: var(--text-muted);">
+        <div class="form-footer">
             <span id="toggleMsg">Join RN-TECH today</span>
-            <a href="#" id="toggleAuthMode" style="color: var(--primary); font-weight: 600; text-decoration: none; margin-left: 4px;">Sign Up</a>
+            <a href="#" id="toggleAuthMode"
+                style="color: var(--primary); font-weight: 600; text-decoration: none; margin-left: 4px;">Sign Up</a>
         </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
@@ -94,4 +124,5 @@
     <script src="firebase-init.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,245 @@
+:root {
+    --primary: #045bb6;
+    --bg-main: #f3f6f9;
+    --card-bg: #ffffff;
+    --text-dark: #111827;
+    --text-muted: #6b7280;
+    --border-color: #e2e8f0;
+    
+    /* Status Colors */
+    --present-color: #10b981; /* Green */
+    --present-bg: #d1fae5;
+    --late-color: #f59e0b; /* Orange */
+    --late-bg: #fef3c7;
+    --absent-color: #ef4444; /* Red */
+    --absent-bg: #fee2e2;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    max-width: 100%;
+}
+
+body {
+    background-color: #cbdceb;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 420px;
+    height: 100vh;
+    max-height: 900px;
+    background-color: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+@media (min-width: 421px) {
+    .app-container {
+        height: 90vh;
+        border-radius: 24px;
+    }
+}
+
+/* Header */
+.app-header {
+    background-color: var(--card-bg);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--text-dark);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-btn:hover {
+    background-color: var(--bg-main);
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* Filter Bar */
+.filter-bar {
+    background-color: var(--card-bg);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    z-index: 5;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-bar select, .filter-bar input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    font-size: 13px;
+    color: var(--text-dark);
+    background-color: var(--bg-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.filter-bar select:focus, .filter-bar input:focus {
+    border-color: var(--primary);
+}
+
+#resetFilters {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+#resetFilters:hover {
+    background-color: #034891;
+}
+
+/* History List */
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.history-card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.history-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.student-info .name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.student-info .class-name {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.present {
+    background-color: var(--present-bg);
+    color: var(--present-color);
+}
+
+.status-badge.late {
+    background-color: var(--late-bg);
+    color: var(--late-color);
+}
+
+.status-badge.absent {
+    background-color: var(--absent-bg);
+    color: var(--absent-color);
+}
+
+.status-badge.unmarked {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.history-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    gap: 16px;
+}
+
+.empty-state i {
+    font-size: 48px;
+    color: #cbd5e1;
+}
+
+.date-group-header {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin: 24px 0 12px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}

@@ -30,11 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fetch user profile first to get the correct course name
         db.collection('users').doc(currentStudentID).get().then(userDoc => {
             const userData = userDoc.exists ? userDoc.data() : {};
-            const name = userData.displayName || userData.email.split('@')[0];
-            const studentCourse = userData.course || "General Course";
+            const name = (userData.name || userData.displayName || userData.email.split('@')[0]).toUpperCase();
+            const studentCourse = (userData.course || "General Course").toUpperCase();
             const photoUrl = userData.photoUrl;
             
-            document.getElementById('welcomeMsg').textContent = `Welcome, ${name}`;
+            document.getElementById('welcomeMsg').textContent = `WELCOME, ${name}`;
 
             // Update Header Profile Pic
             const headerPic = document.getElementById('headerProfilePic');
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                   <div class="class-info">
                                       <p class="class-name">${studentCourse}</p>
                                   </div>
-                                  <span class="status-badge ${record.attendanceStatus}">${record.attendanceStatus}</span>
+                                  <span class="status-badge ${record.attendanceStatus}">${record.attendanceStatus.toUpperCase()}</span>
                               </div>
                               <div class="history-card-footer">
                                   <i class="fa-regular fa-calendar"></i>

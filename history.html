@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="history.css">
+    <script src="theme-logic.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -15,7 +16,10 @@
             <button class="back-btn" onclick="window.history.back()">
                 <i class="fa-solid fa-arrow-left"></i>
             </button>
-            <h1 class="header-title">History</h1>
+            <h1 class="header-title" style="flex: 1;">History</h1>
+            <div class="theme-toggle-header" id="themeToggle" style="cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.05); border-radius: 8px; color: var(--text-dark);">
+                <i class="fa-solid fa-moon"></i>
+            </div>
         </header>
         
         <!-- Filter Bar -->
@@ -43,11 +47,11 @@
         <main class="history-list" id="historyList">
             <!-- Records will be dynamically inserted here -->
             <div class="empty-state" id="emptyState" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center;">
-                <div style="background: #f1f5f9; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                    <i class="fa-solid fa-clipboard-list" style="font-size: 32px; color: #94a3b8;"></i>
+                <div style="background: var(--bg-main); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+                    <i class="fa-solid fa-clipboard-list" style="font-size: 32px; color: var(--text-muted);"></i>
                 </div>
-                <h3 style="color: #1e293b; font-size: 18px; margin-bottom: 8px;">No records found</h3>
-                <p style="color: #64748b; font-size: 14px; line-height: 1.5; max-width: 240px;">No attendance matches your current filters. Try adjusting them or wait for the teacher to mark new sessions.</p>
+                <h3 style="color: var(--text-dark); font-size: 18px; margin-bottom: 8px;">No records found</h3>
+                <p style="color: var(--text-muted); font-size: 14px; line-height: 1.5; max-width: 240px;">No attendance matches your current filters. Try adjusting them or wait for the teacher to mark new sessions.</p>
             </div>
         </main>
     </div>

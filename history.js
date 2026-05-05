@@ -25,18 +25,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Populate Class Filter dropdown dynamically
         const currentSelectedClass = classFilter.value;
-        const classes = [...new Set(allRecords.map(r => r.className))];
+        const classSet = new Set(['ADCA', 'DCA', 'ENGLISH', 'COMPETITION CLASS']);
+        allRecords.forEach(r => {
+            const cName = r.className ? r.className.toUpperCase() : '';
+            if (cName && cName !== 'ATTENDANCE RECORD' && cName !== 'ADVANCED PHYSICS 301') {
+                classSet.add(cName);
+            }
+        });
         
-        classFilter.innerHTML = '<option value="all">All Classes</option>';
-        classes.forEach(className => {
+        const sortedClasses = [...classSet].sort();
+        
+        classFilter.innerHTML = '<option value="all">ALL CLASSES</option>';
+        sortedClasses.forEach(className => {
             const option = document.createElement('option');
             option.value = className;
-            option.textContent = className;
+            option.textContent = className.toUpperCase();
             classFilter.appendChild(option);
         });
         
         // Preserve selection if possible
-        if (classes.includes(currentSelectedClass) || currentSelectedClass === 'all') {
+        if (sortedClasses.includes(currentSelectedClass) || currentSelectedClass === 'all') {
             classFilter.value = currentSelectedClass;
         }
 
@@ -114,10 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.innerHTML = `
                     <div class="history-card-header">
                         <div class="student-info">
-                            <h3 class="name">${record.studentName}</h3>
-                            <p class="class-name">${record.className}</p>
+                            <h3 class="name">${record.studentName.toUpperCase()}</h3>
+                            <p class="class-name">${record.className.toUpperCase()}</p>
                         </div>
-                        <span class="status-badge ${record.attendanceStatus}">${record.attendanceStatus}</span>
+                        <span class="status-badge ${record.attendanceStatus}">${record.attendanceStatus.toUpperCase()}</span>
                     </div>
                     <div class="history-card-footer">
                         <i class="fa-regular fa-calendar"></i>
