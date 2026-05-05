@@ -1,0 +1,257 @@
+:root {
+    --primary: #045bb6; /* Match the exact blue */
+    --primary-light: #dceaff; /* Light blue bg for selected role */
+    --bg-main: #d7e1ec;
+    --card-bg: #ffffff;
+    --text-dark: #111827;
+    --text-muted: #475569;
+    --border-color: #cbd5e1;
+    --input-bg: #fafafa;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #e4edf5 0%, #cbdceb 50%, #b2c5da 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background blur shape */
+.background-blur {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.5) 0%, transparent 40%),
+                radial-gradient(ellipse at 70% 70%, rgba(255, 255, 255, 0.4) 0%, transparent 40%);
+    filter: blur(80px);
+    z-index: 0;
+}
+
+.login-container {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 380px;
+    padding: 36px 32px;
+    border-radius: 24px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    position: relative;
+}
+
+/* Logo */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.logo-box {
+    width: 54px;
+    height: 54px;
+    background-color: #1976d2; /* Vibrant blue logo box */
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 22px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+}
+
+.header p {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* Role Selector */
+.role-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.role-card {
+    flex: 1;
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    background-color: var(--card-bg);
+}
+
+.role-icon {
+    font-size: 24px;
+    color: #64748b;
+}
+
+.role-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.check-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 14px;
+    color: var(--primary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Active Role Card */
+.role-card.active {
+    background-color: var(--primary-light);
+    border-color: var(--primary);
+}
+
+.role-card.active .role-icon {
+    color: var(--text-dark);
+}
+
+.role-card.active .check-icon {
+    opacity: 1;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.label-row label {
+    margin-bottom: 0;
+}
+
+.forgot-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper .icon {
+    position: absolute;
+    left: 14px;
+    font-size: 15px;
+    color: #94a3b8;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 15px;
+    color: var(--text-dark);
+    background-color: var(--card-bg);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-wrapper input:focus {
+    border-color: var(--primary);
+}
+
+.input-wrapper input::placeholder {
+    color: #cbd5e1;
+}
+
+.eye-icon {
+    position: absolute;
+    right: 14px;
+    font-size: 15px;
+    color: #94a3b8;
+    cursor: pointer;
+    z-index: 5;
+    padding: 5px; /* Increase tap target */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Remove default IE/Edge reveal button */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none;
+}
+
+/* Login Button */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+    background-color: #034891;
+}
