@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Students - Teacher Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="attendance.css"> <!-- Reusing bottom-nav styles -->
+    <link rel="stylesheet" href="teacher_students.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- Header -->
+        <header class="ts-header">
+            <div class="ts-header-top">
+                <a href="teacher_dashboard.html" class="back-btn"><i class="fa-solid fa-chevron-left"></i></a>
+                <h1 class="header-title">Students</h1>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-bar-container">
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="studentSearch" placeholder="Search by name, course, batch...">
+                </div>
+                <button class="filter-btn" id="filterToggleBtn">
+                    <i class="fa-solid fa-sliders"></i>
+                </button>
+            </div>
+
+            <!-- Filter Panel (collapsible) -->
+            <div class="filter-panel" id="filterPanel" style="display:none;">
+                <select id="filterCourse">
+                    <option value="">All Courses</option>
+                </select>
+                <select id="filterBatch">
+                    <option value="">All Batches</option>
+                </select>
+                <select id="filterAttendance">
+                    <option value="">All Attendance</option>
+                    <option value="good">Good (≥75%)</option>
+                    <option value="warning">Warning (50–74%)</option>
+                    <option value="critical">Critical (&lt;50%)</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="ts-content" id="tsContent">
+
+            <!-- Quick Analytics -->
+            <section class="analytics-strip" id="analyticsStrip">
+                <div class="analytic-card">
+                    <div class="analytic-icon students"><i class="fa-solid fa-users"></i></div>
+                    <div>
+                        <span class="analytic-val" id="totalStudentsCount">–</span>
+                        <span class="analytic-label">Total</span>
+                    </div>
+                </div>
+                <div class="analytic-card">
+                    <div class="analytic-icon present"><i class="fa-solid fa-circle-check"></i></div>
+                    <div>
+                        <span class="analytic-val" id="presentTodayCount">–</span>
+                        <span class="analytic-label">Present Today</span>
+                    </div>
+                </div>
+                <div class="analytic-card">
+                    <div class="analytic-icon avg"><i class="fa-solid fa-chart-line"></i></div>
+                    <div>
+                        <span class="analytic-val" id="avgAttendance">–</span>
+                        <span class="analytic-label">Avg. Attend.</span>
+                    </div>
+                </div>
+                <div class="analytic-card">
+                    <div class="analytic-icon low"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div>
+                        <span class="analytic-val" id="lowAttendanceCount">–</span>
+                        <span class="analytic-label">Low Attend.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="studentsLoader" class="ts-loader">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Loading students...</span>
+            </div>
+
+            <!-- Student List -->
+            <div class="student-list" id="studentList">
+                <!-- Dynamically injected -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="ts-empty" style="display:none;">
+                <div class="empty-icon"><i class="fa-solid fa-user-slash"></i></div>
+                <h3>No Students Found</h3>
+                <p>Students enrolled in your courses will appear here.</p>
+            </div>
+
+            <div class="footer-spacer"></div>
+        </main>
+
+        <!-- Edit Student Modal -->
+        <div id="editStudentModal" class="edit-modal-overlay">
+            <div class="edit-modal-content">
+                <div class="edit-modal-header">
+                    <h2>Edit Student</h2>
+                    <button id="closeEditModal" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+
+                <div class="edit-modal-body">
+                    
+                    <!-- 1. BASIC INFORMATION -->
+                    <div class="edit-section">
+                        <h3>1. Basic Information</h3>
+                        <div class="edit-photo-container" style="margin-bottom: 15px;">
+                            <div class="edit-photo-preview" id="editPhotoPreview">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="edit-photo-actions">
+                                <label for="editPhotoInput" class="btn-primary-sm">
+                                    <i class="fa-solid fa-camera"></i> Change
+                                </label>
+                                <input type="file" id="editPhotoInput" accept="image/*" hidden>
+                                <button id="deletePhotoBtn" class="btn-danger-sm">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Student Name *</label>
+                            <input type="text" id="editStudentName" class="rn-input" placeholder="Enter student name">
+                        </div>
+                        <div class="contact-row">
+                            <div class="input-group">
+                                <label>Phone Number</label>
+                                <input type="tel" id="editPhone" class="rn-input" placeholder="Enter phone number">
+                            </div>
+                            <div class="input-group">
+                                <label>Email Address</label>
+                                <input type="email" id="editEmail" class="rn-input" placeholder="Enter email">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. COURSE INFORMATION -->
+                    <div class="edit-section">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="margin-bottom: 0;">2. Course Information</h3>
+                            <button type="button" id="addCourseBtn" style="background: rgba(37, 99, 235, 0.15); color: #60a5fa; border: 1px solid rgba(37, 99, 235, 0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"><i class="fa-solid fa-plus"></i> Add Course</button>
+                        </div>
+                        <div id="dynamicCourseContainer">
+                            <!-- Dynamic course inputs will be injected here -->
+                        </div>
+                    </div>
+
+                    <!-- 4. BATCH INFORMATION -->
+                    <div class="edit-section">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="margin-bottom: 0;">4. Batch Information</h3>
+                            <button type="button" id="addBatchBtn" style="background: rgba(37, 99, 235, 0.15); color: #60a5fa; border: 1px solid rgba(37, 99, 235, 0.3); padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;"><i class="fa-solid fa-plus"></i> Add Batch</button>
+                        </div>
+                        <div id="dynamicBatchContainer">
+                            <!-- Dynamic batch inputs will be injected here -->
+                        </div>
+                    </div>
+
+                    <!-- 5. CLASS TIMINGS -->
+                    <div class="edit-section">
+                        <h3>5. Class Timings</h3>
+                        <div class="timing-row">
+                            <div class="input-group">
+                                <label>Lab Start</label>
+                                <input type="time" id="editLabStart" class="rn-input" readonly>
+                            </div>
+                            <div class="input-group">
+                                <label>Lab End</label>
+                                <input type="time" id="editLabEnd" class="rn-input" readonly>
+                            </div>
+                        </div>
+                        <div class="timing-row">
+                            <div class="input-group">
+                                <label>Theory Start</label>
+                                <input type="time" id="editTheoryStart" class="rn-input" readonly>
+                            </div>
+                            <div class="input-group">
+                                <label>Theory End</label>
+                                <input type="time" id="editTheoryEnd" class="rn-input" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="edit-modal-footer">
+                    <button id="deleteStudentBtn" class="btn-danger-outline">
+                        <i class="fa-solid fa-trash-can"></i> Delete Student
+                    </button>
+                    <div class="footer-actions-right">
+                        <button id="cancelEditBtn" class="btn-secondary">Cancel</button>
+                        <button id="saveEditBtn" class="btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteConfirmModal" class="edit-modal-overlay">
+            <div class="edit-modal-content confirm-modal">
+                <div class="edit-modal-header danger">
+                    <h2>Confirm Deletion</h2>
+                    <button id="closeDeleteModal" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="edit-modal-body">
+                    <div class="confirm-content">
+                        <div class="confirm-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <h3>Are you sure?</h3>
+                        <p>You are about to permanently delete <strong><span
+                                    id="deleteStudentNameDisplay"></span></strong>.</p>
+                        <ul class="delete-warning-list">
+                            <li>All attendance records will be removed.</li>
+                            <li>History and reports will be wiped.</li>
+                            <li>Profile data and analytics will be lost.</li>
+                            <li>The student will lose access immediately.</li>
+                        </ul>
+                        <p class="delete-note">This action cannot be undone.</p>
+                    </div>
+                </div>
+                <div class="edit-modal-footer">
+                    <button id="cancelDeleteBtn" class="btn-secondary">Keep Student</button>
+                    <button id="confirmDeleteBtn" class="btn-danger">
+                        <i class="fa-solid fa-trash-can"></i> Permanently Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="teacher_dashboard.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-house-chimney"></i>
+                    </div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="attendance.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                    </div>
+                    <span class="nav-label">Attendance</span>
+                </a>
+                <a href="teacher_students.html" class="nav-item active">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <span class="nav-label">Students</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <span class="nav-label">Reports</span>
+                </a>
+                <a href="teacher_profile.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- Core Local-First Engine Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/render-engine.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/components/templates.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="teacher_students.js"></script>
+</body>
+
+</html>

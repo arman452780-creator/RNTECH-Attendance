@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>App Permissions | RN-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="permissions.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <script src="crash-logger.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body data-theme="dark">
+    <div class="background-blur"></div>
+
+    <div class="permissions-container">
+        <div class="header">
+            <div class="logo-box" style="margin: 0 auto 20px;">RN</div>
+            <h1>App Permissions</h1>
+            <p>To provide the best experience, RN-TECH needs access to some features of your device.</p>
+        </div>
+
+        <div class="permission-list">
+            <!-- Notifications -->
+            <div class="permission-card" id="card-notifications">
+                <div class="permission-icon">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div class="permission-info">
+                    <h3>Notifications</h3>
+                    <p>Get attendance alerts instantly.</p>
+                </div>
+                <div class="status-indicator" id="status-notifications">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+
+            <!-- Camera -->
+            <div class="permission-card" id="card-camera">
+                <div class="permission-icon">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <div class="permission-info">
+                    <h3>Camera</h3>
+                    <p>Upload and change profile photo.</p>
+                </div>
+                <div class="status-indicator" id="status-camera">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+
+            <!-- Photos -->
+            <div class="permission-card" id="card-photos">
+                <div class="permission-icon">
+                    <i class="fa-solid fa-images"></i>
+                </div>
+                <div class="permission-info">
+                    <h3>Photos</h3>
+                    <p>Choose profile pictures from gallery.</p>
+                </div>
+                <div class="status-indicator" id="status-photos">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-section">
+            <button id="continueBtn" class="continue-btn">
+                <span>Continue</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <p class="footer-hint">You can change these later in settings.</p>
+        </div>
+    </div>
+
+    <!-- Alert Modal for Denied Permissions -->
+    <div id="permissionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon error" id="modalIcon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 id="modalTitle">Permission Required</h3>
+                <p id="modalMessage">This feature requires access to work properly.</p>
+            </div>
+            <div class="modal-footer" style="flex-direction: column; gap: 10px; width: 100%;">
+                <button id="settingsBtn" class="modal-btn primary" style="width: 100%; display: none;">Open Settings</button>
+                <button id="closeModalBtn" class="modal-btn" style="width: 100%; background: transparent; color: var(--text-muted); border: none;">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="capacitor.js"></script>
+    <script src="permissions.js"></script>
+</body>
+
+</html>

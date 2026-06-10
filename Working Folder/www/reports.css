@@ -1,0 +1,470 @@
+:root {
+    --primary: var(--accent-color);
+    --primary-light: var(--accent-transparent);
+    --bg-main: var(--bg-main);
+    --card-bg: var(--card-bg);
+    --text-dark: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: rgba(51, 65, 85, 0.5);
+    
+    /* Status Colors */
+    --present-color: #10b981;
+    --present-bg: rgba(16, 185, 129, 0.2);
+    --late-color: #f59e0b;
+    --late-bg: rgba(245, 158, 11, 0.2);
+    --absent-color: #ef4444;
+    --absent-bg: rgba(239, 68, 68, 0.2);
+}
+
+/* Fix for dark calendar icon visibility */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevents the whole page from scrolling */
+    width: 100%;
+    height: 100dvh;
+    background-color: transparent;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: transparent;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 540px; /* Increased from 500px */
+    height: 100dvh;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    overflow: hidden;
+    transition: max-width 0.3s ease;
+}
+
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .app-container {
+        max-width: 900px;
+    }
+}
+
+@media (min-width: 501px) {
+    body {
+        padding: 20px 0;
+        align-items: center;
+    }
+    .app-container {
+        height: 90vh;
+        max-height: 850px;
+        border-radius: 28px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+}
+
+/* Fixed Section Wrapper */
+.fixed-header-section {
+    width: 100%;
+    flex-shrink: 0; /* Prevents this section from shrinking */
+    z-index: 100;
+    background-color: transparent;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Header */
+.app-header {
+    width: 100%;
+    background-color: var(--card-bg);
+    padding: calc(16px + env(safe-area-inset-top)) 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+
+/* Filter Bar */
+.filter-bar {
+    width: 100%;
+    background-color: var(--card-bg);
+    padding: 12px 20px 0; /* Reduced bottom padding to 0 */
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    z-index: 5;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-bar select, .filter-bar input {
+    flex: 1;
+    min-width: 0; /* Crucial for preventing flex overflow */
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    font-size: 12px;
+    color: var(--text-dark);
+    background-color: var(--bg-main);
+    outline: none;
+    transition: all 0.2s;
+    height: 36px;
+}
+
+.filter-bar select:focus, .filter-bar input:focus {
+    border-color: var(--primary);
+}
+
+#resetFilters {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+#resetFilters i {
+    font-size: 16px;
+}
+
+#resetFilters:hover {
+    background-color: #034891;
+}
+
+/* History List - ONLY this section scrolls */
+.history-list {
+    flex: 1; /* Occupies remaining space */
+    min-height: 0; /* Important for flex-basis in some browsers */
+    overflow-y: auto; /* Enables vertical scrolling */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Native-like momentum scrolling for iOS/Android */
+    overscroll-behavior-y: contain; /* Prevents scroll chaining to body */
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    
+    /* Hide default scrollbar */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.history-list::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.history-card {
+    background-color: var(--card-bg);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid var(--border-color);
+}
+
+.history-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2), 0 0 10px var(--accent-transparent);
+    border-color: var(--accent-color);
+}
+
+.history-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.history-card .student-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.student-info .name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.student-info .class-name {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-badge.present {
+    background-color: var(--present-bg);
+    color: var(--present-color);
+}
+
+.status-badge.late {
+    background-color: var(--late-bg);
+    color: var(--late-color);
+}
+
+.status-badge.absent {
+    background-color: var(--absent-bg);
+    color: var(--absent-color);
+}
+
+.status-badge.unmarked {
+    background-color: var(--border-color);
+    color: var(--text-muted);
+}
+
+.history-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    margin-top: 4px;
+}
+
+.history-card:active {
+    transform: scale(0.98);
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    gap: 16px;
+}
+
+.date-group-header {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 24px 0 12px 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-group-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-color);
+    opacity: 0.5;
+}
+
+/* Attendance History Summary Stat Pills */
+.attendance-summary {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 15px 10px;
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    background: var(--bg-main);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.stat-pill.present {
+    color: var(--present-color);
+    background: var(--present-bg);
+    border-color: rgba(16, 185, 129, 0.1);
+}
+
+.stat-pill.late {
+    color: var(--late-color);
+    background: var(--late-bg);
+    border-color: rgba(245, 158, 11, 0.1);
+}
+
+.stat-pill.absent {
+    color: var(--absent-color);
+    background: var(--absent-bg);
+    border-color: rgba(239, 68, 68, 0.1);
+}
+
+.stat-pill .count {
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.stat-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.stat-pill.active {
+    transform: translateY(-2px) scale(1.05);
+}
+
+.stat-pill.present.active {
+    background-color: var(--present-color) !important;
+    color: white !important;
+    border-color: var(--present-color);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+
+.stat-pill.late.active {
+    background-color: var(--late-color) !important;
+    color: white !important;
+    border-color: var(--late-color);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.stat-pill.absent.active {
+    background-color: var(--absent-color) !important;
+    color: white !important;
+    border-color: var(--absent-color);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+}
+
+/* --- Unified Bottom Navigation Styles --- */
+.bottom-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 540px; /* Increased to match container */
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(37, 99, 235, 0.1);
+    z-index: 1000;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .bottom-nav {
+        bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+}
+
+.nav-content {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+}
+
+.bottom-spacer {
+    height: 140px;
+    flex-shrink: 0;
+}
+
+/* --------------------------------------
+   SMALL DEVICE OPTIMIZATIONS (< 380px)
+   -------------------------------------- */
+@media (max-width: 380px) {
+    .reports-header {
+        padding: calc(10px + env(safe-area-inset-top)) 10px 10px !important;
+    }
+
+    .filter-group {
+        gap: 6px !important;
+    }
+
+    .filter-bar {
+        padding: 10px 12px 0 !important;
+    }
+
+    .report-card {
+        padding: 12px 10px !important;
+        border-radius: 16px !important;
+    }
+
+    .stat-row {
+        gap: 8px !important;
+    }
+
+    .stat-label {
+        font-size: 10px !important;
+    }
+
+    .stat-value {
+        font-size: 16px !important;
+    }
+}

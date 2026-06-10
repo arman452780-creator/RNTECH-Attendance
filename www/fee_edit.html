@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Edit Fee Details | RN-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="teacher_dashboard.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <link rel="stylesheet" href="fee_management.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <style>
+        .edit-form-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .edit-section h3 {
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-section h3 i {
+            color: var(--primary);
+        }
+
+        .timing-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .timing-row .input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .rn-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .rn-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .fee-preview-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .preview-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .preview-label {
+            color: var(--text-muted);
+        }
+
+        .preview-value {
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .student-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .student-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--text-dark);
+        }
+
+        .student-header p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 600px) {
+            .timing-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .timing-row .input-group {
+                margin-bottom: 0;
+            }
+            .action-buttons {
+                flex-direction: column-reverse;
+                gap: 10px;
+            }
+            .action-buttons > * {
+                flex: none;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="dashboard-header">
+            <div class="header-main">
+                <div class="user-greeting" style="display: flex; align-items: center; gap: 15px;">
+                    <a href="fee_management.html" class="back-btn" style="color: var(--text-dark); font-size: 20px; text-decoration: none; padding: 5px; opacity: 0.8;">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                    <div>
+                        <h1 class="user-name">Edit Fee Details</h1>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-content" id="dashboardContent" style="padding-top: 15px;">
+            <div class="edit-form-container">
+                <div class="student-header" id="studentHeader">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-light); display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-user" style="color: var(--text-muted);"></i>
+                    </div>
+                    <div>
+                        <h2 id="displayStudentName">Loading...</h2>
+                        <p id="displayStudentCourse">-</p>
+                    </div>
+                </div>
+
+                <div class="edit-section">
+                    <h3><i class="fa-solid fa-indian-rupee-sign"></i> Fee Settings</h3>
+                    
+                    <div class="timing-row">
+                        <div class="input-group">
+                            <label>Joining Date</label>
+                            <input type="date" id="editJoiningDate" class="rn-input">
+                        </div>
+                        <div class="input-group">
+                            <label>Monthly Fee (₹)</label>
+                            <input type="number" id="editMonthlyFee" class="rn-input" placeholder="e.g. 1500" min="0">
+                        </div>
+                    </div>
+
+                    <div class="timing-row">
+                        <div class="input-group">
+                            <label>Course Duration (Months)</label>
+                            <input type="number" id="editCourseDuration" class="rn-input" placeholder="e.g. 12" min="1">
+                        </div>
+                        <div class="input-group">
+                            <label>Paid Months So Far</label>
+                            <input type="number" id="editPaidMonths" class="rn-input" placeholder="e.g. 3" min="0">
+                        </div>
+                    </div>
+
+                    <div class="timing-row">
+                        <div class="input-group">
+                            <label>Total Fee (₹) <span style="opacity:0.5;font-weight:400;">(Optional)</span></label>
+                            <input type="number" id="editTotalFee" class="rn-input" placeholder="e.g. 15000" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label>Registration Fee (₹) <span style="opacity:0.5;font-weight:400;">(Auto deducted)</span></label>
+                            <input type="number" id="editRegistrationFee" class="rn-input" placeholder="e.g. 500" min="0">
+                        </div>
+                    </div>
+
+                    <div class="timing-row">
+                        <div class="input-group">
+                            <label>Fee Remarks <span style="opacity:0.5;font-weight:400;">(Optional)</span></label>
+                            <input type="text" id="editFeeRemarks" class="rn-input" placeholder="e.g. Paid in cash">
+                        </div>
+                    </div>
+
+                    <!-- Auto-calculated preview -->
+                    <div class="fee-preview-box" id="feePreviewBox" style="display:none; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
+                        <div class="preview-row" id="previewTotalFeeRow" style="display:none; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px;">
+                            <span class="preview-label">Total Course Fee:</span>
+                            <span class="preview-value" id="previewTotalFee" style="color: var(--text-dark);">₹0</span>
+                        </div>
+                        <div class="preview-row" id="previewRegistrationFeeRow" style="display:none; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px;">
+                            <span class="preview-label">Registration Fee:</span>
+                            <span class="preview-value" id="previewRegistrationFee" style="color: var(--danger);">- ₹0</span>
+                        </div>
+                        <div class="preview-row" id="previewPayableFeeRow" style="display:none; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px;">
+                            <span class="preview-label">Final Payable Fee:</span>
+                            <span class="preview-value" id="previewPayableFee" style="color: var(--primary);">₹0</span>
+                        </div>
+                        <div class="preview-row" id="previewRemainingFeesRow" style="display:none; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 8px;">
+                            <span class="preview-label">Remaining Fees:</span>
+                            <span class="preview-value" id="previewRemainingFees" style="color: var(--warning);">₹0</span>
+                        </div>
+                        <div class="preview-row">
+                            <span class="preview-label">Next Due Date:</span>
+                            <span class="preview-value" id="previewNextDue">-</span>
+                        </div>
+                        <div class="preview-row">
+                            <span class="preview-label">Remaining Course:</span>
+                            <span class="preview-value" id="previewRemaining">-</span>
+                        </div>
+                        <div class="preview-row">
+                            <span class="preview-label">Fee Status:</span>
+                            <span class="preview-value" id="previewStatus">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="fee_management.html" class="btn-secondary" style="flex: 1; text-align: center; text-decoration: none; padding: 15px; border-radius: 14px;">Cancel</a>
+                    <button id="saveFeeBtn" class="btn-primary" style="flex: 2; padding: 15px; border-radius: 14px; border: none; font-weight: 600; cursor: pointer;">Save Details</button>
+                </div>
+            </div>
+            
+            <div class="footer-spacer"></div>
+        </main>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/core/app-init.js"></script>
+    
+    <script src="components/Toast.js"></script>
+    <script src="fee_edit.js"></script>
+</body>
+</html>

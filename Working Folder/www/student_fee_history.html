@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Fee History - RN-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="student_dashboard.css">
+    <link rel="stylesheet" href="student_navbar.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <link rel="stylesheet" href="student_fee_history.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Premium Header -->
+        <header class="dashboard-header" style="padding-bottom: 20px;">
+            <div class="header-main">
+                <a href="student_dashboard.html" class="back-btn" style="color: var(--text-dark); font-size: 20px; text-decoration: none;">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <div class="greeting-block" style="margin-left: 15px;">
+                    <span class="greeting" style="font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Payments</span>
+                    <h1 class="user-name" style="font-size: 22px; font-weight: 800; color: var(--text-dark);">Fee History</h1>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <section class="section-group">
+                <div class="history-timeline" id="feeHistoryTimeline">
+                    <!-- History entries will be injected here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="student_dashboard.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-house-chimney"></i></div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="student_timetable.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-calendar-days"></i></div>
+                    <span class="nav-label">Timetable</span>
+                </a>
+                <a href="student_history.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-chart-line"></i></div>
+                    <span class="nav-label">Reports</span>
+                </a>
+                <a href="student_profile.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-circle-user"></i></div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Core Local-First Engine Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="student_fee_history.js"></script>
+</body>
+</html>

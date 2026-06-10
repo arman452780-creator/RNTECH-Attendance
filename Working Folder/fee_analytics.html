@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Fee Analytics | RN-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="teacher_dashboard.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <link rel="stylesheet" href="attendance.css"> <!-- Reusing bottom-nav styles -->
+    <link rel="stylesheet" href="fee_analytics.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <div class="sticky-top-container" style="position: sticky; top: 0; z-index: 100; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); background: rgba(10, 15, 30, 0.92); border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+            <header class="dashboard-header" style="padding-bottom: 15px; background: transparent; backdrop-filter: none;">
+                <div class="header-main" style="margin-bottom: 0;">
+                    <div class="user-greeting" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <a href="fee_management.html" class="back-btn" style="color: var(--text-dark); font-size: 20px; text-decoration: none; padding: 5px; opacity: 0.8;">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </a>
+                            <div>
+                                <p class="greeting">Financial Dashboard</p>
+                                <h1 class="user-name">Fee Analytics</h1>
+                            </div>
+                        </div>
+                        <button id="exportSummaryBtn" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); color: var(--success); padding: 8px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <i class="fa-solid fa-file-export"></i> Export
+                        </button>
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <main class="dashboard-content" style="padding-top: 15px;" id="analyticsContent">
+            
+            <!-- OVERVIEW CARDS (SECTION 1 & 2) -->
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="card-icon" style="background: rgba(99, 102, 241, 0.15); color: var(--primary);">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div class="card-info">
+                        <p>Total Active Collection</p>
+                        <h3 id="statTotalFee">₹0</h3>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-icon" style="background: rgba(16, 185, 129, 0.15); color: var(--success);">
+                        <i class="fa-solid fa-money-bill-trend-up"></i>
+                    </div>
+                    <div class="card-info">
+                        <p>Total Collected</p>
+                        <h3 id="statTotalCollected">₹0</h3>
+                    </div>
+                </div>
+
+                <div class="analytics-card">
+                    <div class="card-icon" style="background: rgba(255, 171, 0, 0.15); color: var(--warning);">
+                        <i class="fa-solid fa-hourglass-half"></i>
+                    </div>
+                    <div class="card-info">
+                        <p>Remaining Collection</p>
+                        <h3 id="statRemainingCollection">₹0</h3>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-icon" style="background: rgba(255, 23, 68, 0.15); color: var(--danger);">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="card-info">
+                        <p>Total Overdue Amount</p>
+                        <h3 id="statTotalOverdue">₹0</h3>
+                    </div>
+                </div>
+
+                <div class="analytics-card full-width">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="card-icon" style="background: rgba(255, 255, 255, 0.1); color: #fff;">
+                                <i class="fa-solid fa-percent"></i>
+                            </div>
+                            <div class="card-info">
+                                <p>Collection Rate</p>
+                                <h3 id="statCollectionRate">0%</h3>
+                            </div>
+                        </div>
+                        <div class="progress-ring-container">
+                            <!-- Circular Progress will go here if needed, or just standard text -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAYMENT STATUS BREAKDOWN (SECTION 2) -->
+            <h2 class="section-title"><i class="fa-solid fa-chart-pie"></i> Payment Status Breakdown</h2>
+            <div class="status-breakdown-grid">
+                <div class="status-card" style="background: rgba(255, 61, 87, 0.05); border: 1px solid rgba(255, 61, 87, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="color: var(--danger); font-size: 22px; margin-bottom: 8px;"><i class="fa-solid fa-circle-exclamation"></i></div>
+                    <h4 style="color: var(--danger); font-size: 14px; margin-bottom: 12px; font-weight: 700;">Overdue</h4>
+                    <div class="status-stats">
+                        <strong id="amountOverdue" style="font-size: 18px; display: block; margin-bottom: 4px; color: var(--text-dark);">₹0</strong>
+                        <span id="countOverdue" style="font-size: 11px; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 12px;">0 Students</span>
+                    </div>
+                </div>
+                <div class="status-card" style="background: rgba(255, 152, 0, 0.05); border: 1px solid rgba(255, 152, 0, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="color: var(--warning); font-size: 22px; margin-bottom: 8px;"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    <h4 style="color: var(--warning); font-size: 14px; margin-bottom: 12px; font-weight: 700;">Due Soon</h4>
+                    <div class="status-stats">
+                        <strong id="amountDueSoon" style="font-size: 18px; display: block; margin-bottom: 4px; color: var(--text-dark);">₹0</strong>
+                        <span id="countDueSoon" style="font-size: 11px; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 12px;">0 Students</span>
+                    </div>
+                </div>
+                <div class="status-card" style="background: rgba(0, 230, 118, 0.05); border: 1px solid rgba(0, 230, 118, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <div style="color: var(--success); font-size: 22px; margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i></div>
+                    <h4 style="color: var(--success); font-size: 14px; margin-bottom: 12px; font-weight: 700;">Paid / Clear</h4>
+                    <div class="status-stats">
+                        <strong id="amountPaid" style="font-size: 18px; display: block; margin-bottom: 4px; color: var(--text-dark);">₹0</strong>
+                        <span id="countPaid" style="font-size: 11px; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 12px;">0 Students</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MONTHLY COLLECTION CHART (SECTION 4) -->
+            <h2 class="section-title"><i class="fa-solid fa-chart-column"></i> Monthly Collection (Last 6 Months)</h2>
+            <div class="chart-container glass-panel">
+                <canvas id="monthlyCollectionChart"></canvas>
+            </div>
+
+            <!-- COURSE-WISE COLLECTION (SECTION 3) -->
+            <h2 class="section-title"><i class="fa-solid fa-layer-group"></i> Course-wise Collection</h2>
+            <div class="course-list" id="courseWiseList">
+                <div class="activity-loader">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                </div>
+            </div>
+
+            <!-- TOP PENDING COLLECTIONS (SECTION 5) -->
+            <h2 class="section-title"><i class="fa-solid fa-clock-rotate-left"></i> Top Pending Collections</h2>
+            <div class="pending-list" id="topPendingList">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- UPI PAYMENT ANALYTICS (SECTION 6) -->
+            <div id="upiAnalyticsSection" style="display: none;">
+                <h2 class="section-title"><i class="fa-brands fa-google-pay"></i> UPI Payment Analytics</h2>
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <div class="card-info">
+                            <p>Pending Verifications</p>
+                            <h3 id="upiPendingCount">0</h3>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="card-info">
+                            <p>Approved Payments</p>
+                            <h3 id="upiApprovedCount">0</h3>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="card-info">
+                            <p>Rejected</p>
+                            <h3 id="upiRejectedCount">0</h3>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="card-info">
+                            <p>Submitted Amount</p>
+                            <h3 id="upiTotalAmount">₹0</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-spacer"></div>
+        </main>
+
+        <!-- Modern Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="teacher_dashboard.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-house-chimney"></i>
+                    </div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+
+                <a href="attendance.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                    </div>
+                    <span class="nav-label">Attendance</span>
+                </a>
+
+                <a href="teacher_students.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <span class="nav-label">Students</span>
+                </a>
+
+                <a href="reports.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <span class="nav-label">Reports</span>
+                </a>
+
+                <a href="teacher_profile.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="components/Toast.js"></script>
+    
+    <script src="fee_analytics.js"></script>
+</body>
+</html>

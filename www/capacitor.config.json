@@ -1,5 +1,14 @@
 {
   "appId": "com.attendance.pro",
   "appName": "Attendance Pro",
-  "webDir": "www"
+  "webDir": "www",
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": [
+        "badge",
+        "sound",
+        "alert"
+      ]
+    }
+  }
 }

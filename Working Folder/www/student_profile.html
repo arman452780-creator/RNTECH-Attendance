@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>My Profile - RN-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="student_dashboard.css">
+    <link rel="stylesheet" href="student_profile.css">
+    <link rel="stylesheet" href="student_navbar.css">
+    <link rel="stylesheet" href="ui-popups.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body>
+    <!-- Instant pre-render: reads cache before DOMContentLoaded to eliminate blank flash -->
+    <script>
+        (function() {
+            try {
+                const u = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                if (u) {
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var n = document.getElementById('profileDisplayName');
+                        var e = document.getElementById('profileEmail');
+                        var sid = document.getElementById('profileStudentID');
+                        var ic = document.getElementById('infoCourse');
+                        var ib = document.getElementById('infoBatch');
+                        var is_ = document.getElementById('infoSubject');
+                        var ip = document.getElementById('infoPhone');
+                        var ibio = document.getElementById('infoBio');
+                        var as_ = document.getElementById('anaSubject');
+                        if (n) n.textContent = (u.name || 'Student').toUpperCase();
+                        if (e) e.textContent = u.email || '';
+                        if (sid) sid.textContent = 'ID: ' + ((u.id || u.uid || '').substring(0,10).toUpperCase() || 'RN-NEW');
+                        if (ic) ic.textContent = (u.course || 'N/A').toUpperCase();
+                        if (is_) is_.textContent = (u.subjectName || u.subject || 'N/A').toUpperCase();
+                        if (as_) as_.textContent = (u.subjectName || u.subject || '—').toUpperCase();
+                        var b1=u.batch1||u.batchName||u.batch||'', b2=u.batch2||'', b3=u.batch3||'';
+                        var ba=[b1,b2,b3].filter(Boolean);
+                        if (ib) ib.textContent = (ba.length>0?ba.join(' • '):'N/A').toUpperCase();
+                        if (ip) ip.textContent = u.phone || 'Not Linked';
+                        if (ibio) ibio.textContent = u.bio || 'Success is the goal.';
+                        if (u.profileImage || u.photoUrl) {
+                            var pic = document.getElementById('profileImgContainer');
+                            if (pic) pic.innerHTML = '<img src="'+(u.profileImage||u.photoUrl)+'" class="profile-img" alt="Profile">';
+                        } else if (u.name) {
+                            var pic2 = document.getElementById('profileImgContainer');
+                            var ini = u.name.split(' ').map(function(x){return x[0]||'';}).join('').substring(0,2).toUpperCase();
+                            if (pic2) pic2.innerHTML = '<div style="font-size:32px;font-weight:800;color:var(--accent-color);">'+ini+'</div>';
+                        }
+                    });
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top-bar">
+                <div class="app-brand">
+                    <span class="brand-rn">RN-</span><span class="brand-tech">TECH</span>
+                </div>
+                <div class="header-right">
+                    <button class="logout-btn" id="logoutBtnTop" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <!-- Top Profile Card -->
+            <div class="profile-header-card">
+                <div class="profile-avatar-wrapper">
+                    <div class="profile-img-container" id="profileImgContainer">
+                        <i class="fa-solid fa-user" style="font-size: 40px; color: var(--text-muted);"></i>
+                    </div>
+                    <div class="status-indicator"></div>
+                </div>
+                <div class="profile-info-main">
+                    <h1 class="profile-name" id="profileDisplayName">—</h1>
+                    <p class="reports-subtitle" id="profileEmail"></p>
+                </div>
+
+
+                <button class="premium-edit-btn" id="openEditModalBtn">
+                    <i class="fa-solid fa-user-pen"></i> Edit Profile
+                </button>
+            </div>
+
+            <!-- Profile Analytics -->
+            <div class="profile-analytics">
+                <div class="p-ana-card">
+                    <span class="p-ana-val" id="anaAttendance">0%</span>
+                    <span class="p-ana-label">Attendance</span>
+                </div>
+                <div class="p-ana-card">
+                    <span class="p-ana-val" id="anaClasses">0</span>
+                    <span class="p-ana-label">Total Classes</span>
+                </div>
+            </div>
+
+            <!-- Detailed Information -->
+            <div class="info-section">
+                <h3 class="section-title-premium"><i class="fa-solid fa-id-card"></i> Academic Info</h3>
+                <div class="info-item">
+                    <span class="info-label">Course</span>
+                    <span class="info-value" id="infoCourse">—</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Batch</span>
+                    <span class="info-value" id="infoBatch">—</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Subject</span>
+                    <span class="info-value" id="infoSubject">—</span>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3 class="section-title-premium"><i class="fa-solid fa-user-tag"></i> Personal Info</h3>
+                <div class="info-item">
+                    <span class="info-label">Phone</span>
+                    <span class="info-value" id="infoPhone">—</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">About</span>
+                    <span class="info-value" id="infoBio" style="text-align: right; max-width: 60%;">—</span>
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div class="info-section">
+                <h3 class="section-title-premium"><i class="fa-solid fa-clock-rotate-left"></i> Recent Activity</h3>
+                <div id="recentActivityList"></div>
+            </div>
+
+            <!-- Settings -->
+            <div class="info-section" style="background: transparent; border: none; padding: 0;">
+                <h3 class="section-title-premium">Settings</h3>
+                <div class="settings-list">
+                    <div class="info-section" style="background: transparent; border: none; padding: 0 0 10px;">
+                        <h3 class="section-title-premium" style="margin-bottom: 10px;"><i
+                                class="fa-solid fa-palette"></i> Select Theme</h3>
+                        <div class="theme-selector-wrapper" id="themeSelectorContainer">
+                            <!-- Theme pills will be injected here by theme-system.js -->
+                        </div>
+                    </div>
+                    <div class="setting-card" id="notifToggleCard" style="cursor: pointer;">
+                        <div class="setting-left">
+                            <div class="setting-icon"><i class="fa-solid fa-bell"></i></div>
+                            <span class="setting-name">Notifications</span>
+                        </div>
+                        <label class="rn-toggle">
+                            <input type="checkbox" id="notifCheckbox" checked>
+                            <span class="rn-slider"></span>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="premium-footer-signature">
+                DEVELOPED BY <span class="dev-name">@ARMAAN</span>
+                <div class="footer-glow-bar"></div>
+            </div>
+        </main>
+
+        <!-- Edit Profile Modal -->
+        <div class="modal-overlay" id="editProfileModal">
+            <div class="modal-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark);">Edit Profile</h2>
+                    <button id="closeModalBtn"
+                        style="background: transparent; border: none; color: var(--text-muted); font-size: 20px;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="edit-photo-section">
+                    <div class="edit-avatar" id="editAvatarPreview">
+                        <i class="fa-solid fa-user" style="font-size: 30px; color: var(--text-muted);"></i>
+                    </div>
+                    <div class="photo-action-row">
+                        <button class="p-photo-btn primary" id="uploadPhotoBtn">
+                            <i class="fa-solid fa-camera-retro"></i> Change
+                        </button>
+                        <button class="p-photo-btn danger" id="deletePhotoBtn">
+                            <i class="fa-solid fa-trash-can"></i> Delete
+                        </button>
+                    </div>
+                    <input type="file" id="photoInput" style="display: none;" accept="image/*">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Full Name</label>
+                    <input type="text" id="editName" class="premium-input" placeholder="Enter your name">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Phone Number</label>
+                    <input type="tel" id="editPhone" class="premium-input" placeholder="+91 XXXXX XXXXX">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Bio / About</label>
+                    <textarea id="editBio" class="premium-input bio-input"
+                        placeholder="Write something about yourself..."></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">New Password (optional)</label>
+                    <input type="password" id="editPass" class="premium-input"
+                        placeholder="Leave blank to keep current">
+                </div>
+
+                <button class="premium-edit-btn" id="saveProfileBtn">
+                    <i class="fa-solid fa-circle-check"></i> Save Changes
+                </button>
+            </div>
+        </div>
+
+
+
+        <!-- Theme Studio Modal -->
+        <div class="modal-overlay" id="themeStudioModal">
+            <div class="modal-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark);"><i
+                            class="fa-solid fa-wand-magic-sparkles"></i> Theme Studio</h2>
+                    <button id="closeStudioBtn"
+                        style="background: transparent; border: none; color: var(--text-muted); font-size: 20px;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Create your unique RN-TECH
+                    experience by customizing colors live.</p>
+
+                <div class="studio-controls">
+                    <div class="studio-item">
+                        <label class="studio-label">Accent Color</label>
+                        <input type="color" id="colorAccent" class="studio-color-picker">
+                    </div>
+                    <div class="studio-item">
+                        <label class="studio-label">Glow Color</label>
+                        <input type="color" id="colorGlow" class="studio-color-picker">
+                    </div>
+                    <div class="studio-item">
+                        <label class="studio-label">Card Tint</label>
+                        <input type="color" id="colorCard" class="studio-color-picker">
+                    </div>
+                    <div class="studio-item">
+                        <label class="studio-label">Background</label>
+                        <input type="color" id="colorBg" class="studio-color-picker">
+                    </div>
+                </div>
+
+                <button class="premium-edit-btn" id="saveCustomThemeBtn"
+                    style="margin-top: 30px; background: linear-gradient(135deg, #2563eb, #8b5cf6);">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Save & Apply Globally
+                </button>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="student_dashboard.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-house-chimney"></i></div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="student_timetable.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-calendar-days"></i></div>
+                    <span class="nav-label">Timetable</span>
+                </a>
+                <a href="student_history.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-chart-line"></i></div>
+                    <span class="nav-label">Reports</span>
+                </a>
+                <a href="student_profile.html" class="nav-item active">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-circle-user"></i></div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-storage-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- Core Local-First Engine Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/render-engine.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/components/templates.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="ui-popups.js"></script>
+    <script src="student_profile.js"></script>
+    <script>
+        // Theme Studio Logic
+        const studioModal = document.getElementById('themeStudioModal');
+        const closeStudioBtn = document.getElementById('closeStudioBtn');
+        const saveCustomBtn = document.getElementById('saveCustomThemeBtn');
+
+        window.openThemeStudio = () => {
+            studioModal.classList.add('active');
+            // Load current colors into pickers
+            const custom = RNTheme.customData() || {};
+            document.getElementById('colorAccent').value = custom['accent-color'] || '#2563eb';
+            document.getElementById('colorGlow').value = custom['accent-glow'] || '#1d4ed8';
+            document.getElementById('colorCard').value = custom['card-bg'] || '#1e293b';
+            document.getElementById('colorBg').value = custom['bg-main'] || '#0f172a';
+        };
+
+        closeStudioBtn.onclick = () => studioModal.classList.remove('active');
+
+        // Live Preview
+        ['colorAccent', 'colorGlow', 'colorCard', 'colorBg'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                const map = {
+                    'colorAccent': 'accent-color',
+                    'colorGlow': 'accent-glow',
+                    'colorCard': 'card-bg',
+                    'colorBg': 'bg-main'
+                };
+                document.documentElement.style.setProperty(`--${map[id]}`, e.target.value);
+                if (id === 'colorAccent') {
+                    // Update RGB for transparent variants
+                    const hex = e.target.value;
+                    const r = parseInt(hex.slice(1, 3), 16);
+                    const g = parseInt(hex.slice(3, 5), 16);
+                    const b = parseInt(hex.slice(5, 7), 16);
+                    document.documentElement.style.setProperty('--accent-rgb', `${r}, ${g}, ${b}`);
+                }
+            });
+        });
+
+        saveCustomBtn.onclick = () => {
+            const data = {
+                'accent-color': document.getElementById('colorAccent').value,
+                'accent-glow': document.getElementById('colorGlow').value,
+                'card-bg': document.getElementById('colorCard').value,
+                'bg-main': document.getElementById('colorBg').value
+            };
+            RNTheme.apply('custom', data);
+            studioModal.classList.remove('active');
+            if (window.RNPopups) RNPopups.toast("Custom Theme Applied Globally!");
+        };
+    </script>
+</body>
+
+</html>

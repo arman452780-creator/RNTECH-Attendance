@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Dashboard - Teacher Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="teacher_dashboard.css">
+    <link rel="stylesheet" href="attendance.css"> <!-- Reusing bottom-nav styles -->
+    <link rel="stylesheet" href="global-theme.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Top Sticky Header -->
+        <header class="dashboard-header">
+            <div class="header-main">
+                <div class="user-greeting">
+                    <p class="greeting" id="greetingText">Good Morning,</p>
+                    <h1 class="user-name" id="teacherNameHeader">Teacher</h1>
+                </div>
+                <div class="header-actions">
+                    <div class="notif-btn" id="notifBtn">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="notif-dot"></span>
+                    </div>
+                    <a href="teacher_profile.html" class="avatar-link">
+                        <img id="headerAvatar"
+                            src="https://ui-avatars.com/api/?name=Teacher&background=2563eb&color=fff" alt="Profile">
+                    </a>
+                </div>
+            </div>
+            <div class="header-date-row">
+                <p class="current-date" id="dashboardDate">Friday, May 8</p>
+            </div>
+        </header>
+
+        <!-- Scrollable Dashboard Content -->
+        <main class="dashboard-content" id="dashboardContent">
+
+            <!-- Quick Stats Section -->
+            <section class="stats-grid">
+                <div class="stat-card students">
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-val counter" id="statTotalStudents">0</span>
+                        <span class="stat-label">Total Students</span>
+                    </div>
+                </div>
+                <div class="stat-card present">
+                    <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-val counter" id="statPresentToday">0</span>
+                        <span class="stat-label">Present Today</span>
+                    </div>
+                </div>
+                <div class="stat-card absent">
+                    <div class="stat-icon"><i class="fa-solid fa-user-xmark"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-val counter" id="statAbsentToday">0</span>
+                        <span class="stat-label">Absent Today</span>
+                    </div>
+                </div>
+                <div class="stat-card percentage">
+                    <div class="stat-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-val" id="statAvgAttendance">0%</span>
+                        <span class="stat-label">Att. Rate</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mini Fee Alerts Section -->
+            <div class="mini-fee-alerts" id="miniFeeAlerts" style="display: none; padding: 0 20px 10px; gap: 10px;">
+                <div class="mini-alert overdue-alert" id="miniOverdueAlert" style="display: none;">
+                    <span class="dot">🔴</span> <strong id="miniOverdueCount">0</strong> Overdue
+                </div>
+                <div class="mini-alert due-soon-alert" id="miniDueSoonAlert" style="display: none;">
+                    <span class="dot">🟡</span> <strong id="miniDueSoonCount">0</strong> Due Soon
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <section class="section-group">
+                <h3 class="section-title">Quick Actions</h3>
+                <div class="actions-row">
+                    <a href="attendance.html" class="action-btn-card">
+                        <div class="action-icon att"><i class="fa-solid fa-clipboard-user"></i></div>
+                        <span>Attendance</span>
+                    </a>
+                    <a href="fee_management.html" class="action-btn-card">
+                        <div class="action-icon fee" style="color: #10b981; background: rgba(16, 185, 129, 0.15); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                        <span>Fee Center</span>
+                    </a>
+                    <a href="reports.html" class="action-btn-card">
+                        <div class="action-icon rep"><i class="fa-solid fa-file-invoice"></i></div>
+                        <span>Reports</span>
+                    </a>
+                    <a href="#" class="action-btn-card">
+                        <div class="action-icon not"><i class="fa-solid fa-message"></i></div>
+                        <span>Notify All</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Global Announcement Container -->
+            <div id="globalAnnouncementCard" style="display: none;"></div>
+
+            <!-- Today's Classes Section -->
+            <section class="section-group">
+                <div class="section-header">
+                    <h3 class="section-title">Today's Classes</h3>
+                    <a href="teacher_classes.html" class="see-all">See All</a>
+                </div>
+                <div class="classes-scroll-row" id="todayClassesRow">
+                    <!-- Dynamic classes will be loaded here -->
+                    <div class="no-classes-msg" id="noClassesMsg">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        <p>No classes scheduled for today.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section-group">
+                <div class="section-header">
+                    <h3 class="section-title">Weekly Performance</h3>
+                    <div class="week-nav-controls">
+                        <button id="prevWeek" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="weekRangeLabel" class="week-label">Current Week</span>
+                        <button id="nextWeek" class="nav-btn" disabled><i
+                                class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="analytics-card">
+                    <div class="chart-placeholder">
+                        <div class="bar-group">
+                            <div class="bar" id="barMon" style="height: 0%;"><span>M</span></div>
+                            <div class="bar" id="barTue" style="height: 0%;"><span>T</span></div>
+                            <div class="bar" id="barWed" style="height: 0%;"><span>W</span></div>
+                            <div class="bar" id="barThu" style="height: 0%;"><span>T</span></div>
+                            <div class="bar" id="barFri" style="height: 0%;"><span>F</span></div>
+                            <div class="bar" id="barSat" style="height: 0%;"><span>S</span></div>
+
+                        </div>
+                    </div>
+                    <div class="analytics-footer">
+                        <div class="trend-info" id="trendInfo" style="display: none;">
+                            <i class="fa-solid fa-arrow-up" id="trendIcon"></i>
+                            <span id="trendText">0% increase from last week</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity Section -->
+            <section class="section-group">
+                <h3 class="section-title">Recent Activity</h3>
+                <div class="activity-list" id="recentActivityList">
+                    <!-- Activity items will be loaded here -->
+                    <div class="activity-loader">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            </section>
+
+            <div class="footer-spacer"></div>
+        </main>
+
+        <!-- Modern Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="teacher_dashboard.html" class="nav-item active">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-house-chimney"></i>
+                    </div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+
+                <a href="attendance.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                    </div>
+                    <span class="nav-label">Attendance</span>
+                </a>
+
+                <a href="teacher_students.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <span class="nav-label">Students</span>
+                </a>
+
+                <a href="reports.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <span class="nav-label">Reports</span>
+                </a>
+
+                <a href="teacher_profile.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- Core Local-First Engine Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/global-holiday.js"></script>
+    <script src="js/core/render-engine.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/components/templates.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="teacher_dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,492 @@
+/* global-theme.css - Global Theme System for RN-TECH */
+
+/* Theme Definitions */
+:root {
+    /* Default: RN Dark Blue */
+    --accent-color: #2563eb;
+    --accent-rgb: 37, 99, 235;
+    --accent-glow: rgba(37, 99, 235, 0.3);
+    --accent-transparent: rgba(37, 99, 235, 0.1);
+    --accent-soft: rgba(37, 99, 235, 0.05);
+    --bg-main: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.7);
+}
+
+[data-theme='neon-purple'] {
+    --accent-color: #8b5cf6;
+    --accent-rgb: 139, 92, 246;
+    --accent-glow: rgba(139, 92, 246, 0.3);
+    --accent-transparent: rgba(139, 92, 246, 0.1);
+    --accent-soft: rgba(139, 92, 246, 0.05);
+    --bg-main: #0a0a0f;
+    --card-bg: rgba(24, 24, 38, 0.7);
+}
+
+[data-theme='emerald-tech'] {
+    --accent-color: #10b981;
+    --accent-rgb: 16, 185, 129;
+    --accent-glow: rgba(16, 185, 129, 0.3);
+    --accent-transparent: rgba(16, 185, 129, 0.1);
+    --accent-soft: rgba(16, 185, 129, 0.05);
+    --bg-main: #060a08;
+    --card-bg: rgba(12, 20, 16, 0.7);
+}
+
+[data-theme='crimson-red'] {
+    --accent-color: #ef4444;
+    --accent-rgb: 239, 68, 68;
+    --accent-glow: rgba(239, 68, 68, 0.3);
+    --accent-transparent: rgba(239, 68, 68, 0.1);
+    --accent-soft: rgba(239, 68, 68, 0.05);
+    --bg-main: #0d0a0a;
+    --card-bg: rgba(26, 18, 18, 0.7);
+}
+
+[data-theme='midnight-black'] {
+    --accent-color: #f8fafc; /* White/Silver accent on black */
+    --accent-rgb: 248, 250, 252;
+    --accent-glow: rgba(248, 250, 252, 0.2);
+    --accent-transparent: rgba(248, 250, 252, 0.1);
+    --accent-soft: rgba(248, 250, 252, 0.05);
+    --bg-main: #000000;
+    --card-bg: rgba(15, 15, 15, 0.9);
+    --text-muted: #64748b;
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Global Transition System — Targeted only (wildcard causes Android lag) */
+/* Only transition color-related properties on elements that need it */
+:root {
+    --theme-transition-duration: 0.35s;
+    --theme-transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Apply theme transitions only to elements that visually change on theme switch */
+body,
+.app-container,
+.stat-card, .class-card, .history-card, .report-card,
+.analytic-card, .profile-main-card, .setting-item,
+.dashboard-header, .ts-header, .reports-header, .app-header,
+.bottom-nav, .nav-item, .nav-icon-wrapper,
+.action-icon, .edit-modal-content, .filter-panel select,
+.search-input-wrapper, .filter-btn, .back-btn,
+.sc-stats, .sc-bar-track, .analytic-card,
+.btn-primary, .btn-secondary, .rn-input, .premium-edit-btn {
+    transition:
+        background-color var(--theme-transition-duration) var(--theme-transition-easing),
+        border-color var(--theme-transition-duration) var(--theme-transition-easing),
+        box-shadow var(--theme-transition-duration) var(--theme-transition-easing),
+        color var(--theme-transition-duration) var(--theme-transition-easing);
+    will-change: auto; /* Let browser decide — avoid forcing layers on everything */
+}
+
+/* Interactive elements keep their own transform transitions */
+.stat-card, .class-card, .history-card, .analytic-card {
+    transition:
+        background-color var(--theme-transition-duration) var(--theme-transition-easing),
+        border-color var(--theme-transition-duration) var(--theme-transition-easing),
+        box-shadow var(--theme-transition-duration) var(--theme-transition-easing),
+        color var(--theme-transition-duration) var(--theme-transition-easing),
+        transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Theme Switching Animation Overlay */
+.theme-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, var(--accent-color) 0%, transparent 70%);
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: plus-lighter;
+    transition: none !important;
+}
+
+/* Theme Switch Overlay — lightweight opacity-only animation (no blur = no GPU lag) */
+@keyframes themeWarp {
+    0%   { opacity: 0; transform: scale(1); }
+    30%  { opacity: 0.25; transform: scale(1.05); }
+    100% { opacity: 0; transform: scale(1.1); }
+}
+
+.theme-transition-active .theme-transition-overlay {
+    animation: themeWarp 0.35s ease-out forwards;
+}
+
+/* Enhanced Animated Background (Direct Student Portal Import) */
+body {
+    background-color: var(--bg-main);
+    background-image: 
+        radial-gradient(circle at 0% 0%, var(--accent-glow) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, var(--accent-glow) 0%, transparent 50%);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Pause background animations during theme switch to prevent jank */
+.theme-transition-active body::after,
+.theme-transition-active body::before {
+    animation-play-state: paused;
+}
+
+/* Animated background — use transform instead of background-position for GPU compositing */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(125deg, transparent 45%, var(--accent-transparent) 50%, transparent 55%);
+    background-size: 200% 200%;
+    animation: bgSweep 12s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.4;
+    will-change: background-position;
+}
+
+@keyframes bgSweep {
+    0% { background-position: -100% -100%; }
+    100% { background-position: 100% 100%; }
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at 30% 40%, var(--accent-soft) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: -1;
+    /* Removed mousemove-reactive animation — too expensive on mobile */
+    animation: bgBreathe 10s ease-in-out infinite;
+    will-change: opacity;
+}
+
+@keyframes bgBreathe {
+    0%, 100% { opacity: 0.25; }
+    50%       { opacity: 0.5; }
+}
+
+/* Global Card & Glass Enhancements */
+.stat-card, .class-card, .history-card, .report-card, .setting-item, .analytic-card, .profile-main-card {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.4s ease, 
+                border-color 0.4s ease,
+                background-color 0.6s ease !important;
+}
+
+.stat-card:hover, .class-card:hover, .history-card:hover, .analytic-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3), 0 0 12px var(--accent-transparent);
+    border-color: var(--accent-color);
+}
+
+/* Use simple scale on mobile — no translateY to avoid reflow */
+@media (max-width: 480px) {
+    .stat-card:hover, .class-card:hover, .history-card:hover, .analytic-card:hover {
+        transform: none; /* Disable hover transforms on touch devices */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+}
+
+/* --- Premium RN-TECH Branding Animations (Living Cyber-Tech) --- */
+.app-brand {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 800;
+    cursor: default;
+    user-select: none;
+    position: relative;
+    padding: 10px;
+    animation: logoFloat 4.5s ease-in-out infinite;
+    z-index: 5;
+}
+
+/* Particle Aura Effect */
+.app-brand::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 140%;
+    height: 140%;
+    background: radial-gradient(circle at 20% 30%, var(--accent-glow) 0%, transparent 4%),
+                radial-gradient(circle at 80% 70%, var(--accent-glow) 0%, transparent 4%),
+                radial-gradient(circle at 40% 80%, var(--accent-glow) 0%, transparent 4%),
+                radial-gradient(circle at 70% 20%, var(--accent-glow) 0%, transparent 4%);
+    background-size: 100% 100%;
+    filter: blur(2px);
+    opacity: 0.4;
+    animation: particlesDrift 8s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes particlesDrift {
+    0% { transform: translate(-50%, -50%) rotate(0deg); opacity: 0.3; }
+    50% { opacity: 0.6; }
+    100% { transform: translate(-50%, -50%) rotate(360deg); opacity: 0.3; }
+}
+
+.brand-rn {
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    background: linear-gradient(135deg, #2563eb, #fff, #8b5cf6, #2563eb);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: logoGradient 6s ease infinite, logoShimmer 4s linear infinite, logoGlow 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px var(--accent-glow));
+    letter-spacing: -1.5px;
+    position: relative;
+}
+
+/* 3D Metallic Light Reflection */
+.brand-rn::after {
+    content: 'RN-';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(transparent 45%, rgba(255,255,255,0.4) 50%, transparent 55%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: logoReflection 5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.brand-tech {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    opacity: 0.9;
+    font-weight: 300;
+    letter-spacing: 2px;
+    position: relative;
+    margin-left: 2px;
+    text-shadow: 0 0 10px rgba(255,255,255,0.2);
+}
+
+.brand-tech::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    box-shadow: 0 0 15px var(--accent-color);
+    animation: logoLinePulse 5s ease-in-out infinite;
+}
+
+/* Animation Keyframes */
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-6px) scale(1.02); }
+}
+
+@keyframes logoGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes logoGlow {
+    0%, 100% { filter: drop-shadow(0 0 8px var(--accent-glow)); opacity: 0.9; }
+    50% { filter: drop-shadow(0 0 18px var(--accent-glow)); opacity: 1; }
+}
+
+@keyframes logoShimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+@keyframes logoReflection {
+    0%, 100% { transform: translateY(-5px); opacity: 0; }
+    50% { transform: translateY(5px); opacity: 0.5; }
+}
+
+@keyframes logoLinePulse {
+    0%, 100% { width: 0; left: 50%; opacity: 0; }
+    30%, 70% { width: 100%; left: 0; opacity: 1; }
+}
+
+/* --- Premium Developer Signature (Living Cyber-Tech) --- */
+.dev-credit {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    padding-bottom: env(safe-area-inset-bottom);
+    opacity: 0;
+    animation: fadeIn 1.2s ease-out forwards 1.5s;
+}
+
+.brand-signature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: default;
+    user-select: none;
+    position: relative;
+    padding: 8px 16px;
+    animation: sigFloat 5s ease-in-out infinite;
+}
+
+.sig-prefix {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    opacity: 0.7;
+}
+
+.sig-name {
+    font-size: 13px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #2563eb, #fff, #a855f7, #2563eb);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: logoGradient 6s ease infinite, sigGlow 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px var(--accent-glow));
+    letter-spacing: 1.5px;
+    position: relative;
+}
+
+/* Metallic Shine Sweep */
+.sig-name::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    transform: skewX(-25deg);
+    animation: sigShimmer 4s infinite 2s;
+    pointer-events: none;
+}
+
+/* Glowing Underline */
+.sig-name::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 10%;
+    width: 80%;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+    box-shadow: 0 0 10px var(--accent-color);
+    animation: sigLinePulse 4s ease-in-out infinite;
+}
+
+/* Particle Aura for Signature */
+.brand-signature::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle at 10% 20%, var(--accent-glow) 0%, transparent 5%),
+                radial-gradient(circle at 90% 80%, var(--accent-glow) 0%, transparent 5%);
+    filter: blur(1px);
+    opacity: 0.3;
+    animation: sigParticles 10s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Signature Specific Keyframes */
+@keyframes sigFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+@keyframes sigGlow {
+    0%, 100% { filter: drop-shadow(0 0 5px var(--accent-glow)); opacity: 0.8; }
+    50% { filter: drop-shadow(0 0 12px var(--accent-glow)); opacity: 1; }
+}
+
+@keyframes sigShimmer {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+@keyframes sigLinePulse {
+    0%, 100% { transform: scaleX(0.5); opacity: 0.3; }
+    50% { transform: scaleX(1.2); opacity: 0.8; }
+}
+
+@keyframes sigParticles {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* ── RN-TECH Toast Notification ── */
+.rn-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: rgba(16, 185, 129, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: var(--success);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10000;
+}
+
+.rn-toast.error {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--danger);
+}
+
+.rn-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ── Global Number Input Spinner Fix & Dark Theme Match ── */
+
+/* Set global dark color scheme so default browser popups (like date picker calendars, autofill dropdowns) match the RN-TECH dark theme automatically */
+:root {
+    color-scheme: dark;
+}
+
+/* Hide default browser spinners for number inputs */
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+
+input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+}

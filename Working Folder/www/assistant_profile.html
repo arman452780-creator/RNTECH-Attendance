@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Profile - Assistant Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="teacher_profile.css">
+    <link rel="stylesheet" href="attendance.css"> <!-- Reusing bottom-nav styles -->
+    <link rel="stylesheet" href="ui-popups.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+    <style>
+        .logout-btn-container {
+            margin-top: 30px;
+            padding: 0 20px;
+            margin-bottom: 40px;
+        }
+        .logout-btn-large {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .logout-btn-large:hover {
+            background-color: rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Top Header -->
+        <header class="profile-header">
+            <h1 class="header-title">Profile</h1>
+        </header>
+
+        <!-- Profile Content Scroll Area -->
+        <main class="profile-content" id="profileContent">
+            <!-- Loading State -->
+            <div id="profileLoader" class="loader-overlay">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Loading profile...</span>
+            </div>
+
+            <!-- Profile Info Section -->
+            <section class="profile-main-card">
+                <div class="profile-avatar-container">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-glow-ring" style="background: linear-gradient(135deg, #10b981, #059669);"></div>
+                        <img id="profileImage" src="https://ui-avatars.com/api/?name=Assistant&background=10b981&color=fff" alt="Profile">
+                    </div>
+                </div>
+                <div class="profile-text-info">
+                    <h2 id="assistantName">Loading...</h2>
+                    <p id="assistantRole" class="role-badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">Assistant</p>
+                    <p id="assistantStatus" class="dept-text"><i class="fa-solid fa-circle-check"></i> Active Account</p>
+                </div>
+            </section>
+
+            <!-- Account Details Section -->
+            <section class="settings-group">
+                <h3 class="section-title">Personal Information</h3>
+                <div class="settings-card">
+                    <div class="setting-item">
+                        <div class="item-icon"><i class="fa-solid fa-envelope"></i></div>
+                        <div class="item-content">
+                            <span class="item-label">Email Address</span>
+                            <span class="item-value" id="assistantEmail">...</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Theme Settings Section -->
+            <section class="settings-group">
+                <h3 class="section-title">Settings</h3>
+                <div class="settings-card" style="padding: 15px;">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <i class="fa-solid fa-palette" style="color: var(--accent-color); margin-right: 10px; font-size: 18px;"></i>
+                        <h4 style="margin: 0; font-size: 15px; color: var(--text-dark);">Select Theme</h4>
+                    </div>
+                    <div class="theme-selector-wrapper" id="themeSelectorContainer">
+                        <!-- Theme pills injected by theme-system.js -->
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Logout Section -->
+            <div class="logout-btn-container">
+                <button id="logoutBtn" class="logout-btn-large">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </div>
+
+            <div class="footer-spacer"></div>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="assistant_dashboard.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-house-chimney"></i>
+                    </div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+
+                <a href="attendance.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                    </div>
+                    <span class="nav-label">Attendance</span>
+                </a>
+
+                <a href="assistant_profile.html" class="nav-item active">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+        <!-- Theme Studio Modal -->
+        <div class="modal-overlay" id="themeStudioModal">
+            <div class="modal-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 20px; font-weight: 800; color: var(--text-dark);"><i class="fa-solid fa-wand-magic-sparkles"></i> Theme Studio</h2>
+                    <button id="closeStudioBtn" style="background: transparent; border: none; color: var(--text-muted); font-size: 20px;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Create your unique RN-TECH experience by customizing colors live.</p>
+                <div class="studio-controls">
+                    <div class="studio-item">
+                        <label class="studio-label">Accent Color</label>
+                        <input type="color" id="colorAccent" class="studio-color-picker">
+                    </div>
+                    <div class="studio-item">
+                        <label class="studio-label">Glow Color</label>
+                        <input type="color" id="colorGlow" class="studio-color-picker">
+                    </div>
+                    <div class="studio-item">
+                        <label class="studio-label">Card Tint</label>
+                        <input type="color" id="colorCard" class="studio-color-picker">
+                    </div>
+                    <div class="studio-item">
+                        <label class="studio-label">Background</label>
+                        <input type="color" id="colorBg" class="studio-color-picker">
+                    </div>
+                </div>
+                <button class="logout-btn-large" id="saveCustomThemeBtn" style="margin-top: 30px; background: linear-gradient(135deg, #2563eb, #8b5cf6); color: white; border: none;">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Save & Apply Globally
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- Core Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="ui-popups.js"></script>
+    <script src="assistant_profile.js"></script>
+    <script>
+        // Theme Studio Logic
+        const studioModal = document.getElementById('themeStudioModal');
+        const closeStudioBtn = document.getElementById('closeStudioBtn');
+        const saveCustomBtn = document.getElementById('saveCustomThemeBtn');
+
+        window.openThemeStudio = () => {
+            studioModal.classList.add('active');
+            // Load current colors into pickers
+            const custom = RNTheme.customData() || {};
+            document.getElementById('colorAccent').value = custom['accent-color'] || '#2563eb';
+            document.getElementById('colorGlow').value = custom['accent-glow'] || '#1d4ed8';
+            document.getElementById('colorCard').value = custom['card-bg'] || '#1e293b';
+            document.getElementById('colorBg').value = custom['bg-main'] || '#0f172a';
+        };
+
+        closeStudioBtn.onclick = () => studioModal.classList.remove('active');
+
+        // Live Preview
+        ['colorAccent', 'colorGlow', 'colorCard', 'colorBg'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                const map = {
+                    'colorAccent': 'accent-color',
+                    'colorGlow': 'accent-glow',
+                    'colorCard': 'card-bg',
+                    'colorBg': 'bg-main'
+                };
+                document.documentElement.style.setProperty(`--${map[id]}`, e.target.value);
+                if (id === 'colorAccent') {
+                    // Update RGB for transparent variants
+                    const hex = e.target.value;
+                    const r = parseInt(hex.slice(1, 3), 16);
+                    const g = parseInt(hex.slice(3, 5), 16);
+                    const b = parseInt(hex.slice(5, 7), 16);
+                    document.documentElement.style.setProperty('--accent-rgb', `${r}, ${g}, ${b}`);
+                }
+            });
+        });
+
+        saveCustomBtn.onclick = () => {
+            const data = {
+                'accent-color': document.getElementById('colorAccent').value,
+                'accent-glow': document.getElementById('colorGlow').value,
+                'card-bg': document.getElementById('colorCard').value,
+                'bg-main': document.getElementById('colorBg').value
+            };
+            RNTheme.apply('custom', data);
+            studioModal.classList.remove('active');
+            if (window.RNPopups) RNPopups.toast("Custom Theme Applied Globally!");
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+/* ============================================================
+   smooth-scroll.css — Butter-Smooth Scrolling for RN-TECH
+   Applied globally across Teacher & Student portals.
+   Import order: load AFTER page CSS so these take priority.
+   ============================================================ */
+
+/* ── 1. HTML / Body baseline ─────────────────────────────────
+   Prevent body from intercepting scroll events from children.
+   This stops the page-level "rubber-band" bounce that causes
+   the entire UI to jerk when a scroll container reaches its end. */
+html {
+    scroll-behavior: smooth;
+    overscroll-behavior: none;       /* No browser pull-to-refresh interference */
+}
+
+body {
+    overscroll-behavior: none;       /* Prevent body bounce/jank */
+    -webkit-tap-highlight-color: transparent; /* Remove grey flash on tap */
+}
+
+/* ── 2. Universal Scroll Container Properties ────────────────
+   Every element that has overflow-y:auto gets these for free. */
+
+/* Teacher Portal — main scroll areas */
+.dashboard-content,
+.ts-content,
+.teacher-classes-content,
+.teacher-profile-body,
+.edit-modal-body {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;  /* Momentum/inertia scroll on Android */
+    overscroll-behavior-y: contain;     /* Stop scroll chain reaching body */
+    will-change: transform;             /* GPU layer → compositor-driven scroll */
+    scroll-padding-bottom: 120px;       /* Don't hide content under bottom nav */
+}
+
+/* Student Portal — main scroll areas */
+.student-content,
+.student-profile-body,
+.history-container,
+.timetable-body,
+.timetable-content,
+.reports-body,
+.student-reports-body,
+.attendance-content,
+.modal-body {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    will-change: transform;
+    scroll-padding-bottom: 120px;
+}
+
+/* Shared modal scrollers */
+.edit-modal-body,
+.modal-scroll,
+.student-modal-body {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    will-change: transform;
+}
+
+/* ── 3. Horizontal Scroll Containers ────────────────────────
+   Class cards row, filter panels, tabs — prevent X-axis jank. */
+.classes-scroll-row,
+.filter-panel,
+.tab-row,
+.horizontal-scroll,
+.class-tabs {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;    /* No horizontal bounce */
+    scroll-snap-type: none;            /* Don't force snap unless specified */
+    will-change: transform;
+}
+
+/* ── 4. Global fallback — any overflow-y:auto gets smoothness ─
+   Catches any container not listed above. */
+[style*="overflow-y: auto"],
+[style*="overflow-y:auto"] {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* ── 5. Scrollbar Hiding (Android native feel) ───────────────
+   Hide ALL scrollbars across both portals for native app feel. */
+* {
+    scrollbar-width: none;             /* Firefox */
+    -ms-overflow-style: none;          /* IE/Edge */
+}
+*::-webkit-scrollbar {
+    display: none;                     /* Chrome, Safari, Android WebView */
+    width: 0;
+    height: 0;
+}
+
+/* ── 6. Touch Feedback Optimization ─────────────────────────
+   Prevent 300ms click delay on interactive elements.
+   "manipulation" = instant tap response, no double-tap zoom. */
+a, button, [role="button"],
+.nav-item, .action-btn-card, .stat-card,
+.class-card, .student-card-profile,
+.theme-card, .setting-card, .back-btn,
+.filter-btn, .sc-edit-btn, .analytic-card,
+.history-card, .report-card, .attendance-row,
+.tab-btn, .day-tab, .bottom-nav-item {
+    touch-action: manipulation;        /* No 300ms delay, no double-tap zoom */
+    -webkit-tap-highlight-color: transparent; /* No grey flash */
+    cursor: pointer;
+}
+
+/* ── 7. Prevent content shift during momentum scroll ─────────
+   Stop child elements from triggering layout during fast fling. */
+.dashboard-content *,
+.ts-content *,
+.history-container *,
+.timetable-content *,
+.student-profile-body *,
+.classes-scroll-row *,
+.classes-row *,
+.filter-panel *,
+.tab-row *,
+.horizontal-scroll *,
+.class-tabs * {
+    backface-visibility: hidden;       /* Promotes to GPU layer during scroll */
+    -webkit-backface-visibility: hidden;
+}
+
+/* ── 8. Android-specific momentum improvements ───────────────
+   Use transform-based stacking context for scroll containers
+   so the GPU handles scroll compositing — no CPU jank. */
+@media (max-width: 768px) {
+    .dashboard-content,
+    .ts-content,
+    .history-container,
+    .timetable-content,
+    .student-profile-body,
+    .edit-modal-body,
+    .reports-body,
+    .student-reports-body,
+    .classes-scroll-row,
+    .classes-row,
+    .filter-panel,
+    .tab-row,
+    .horizontal-scroll,
+    .class-tabs {
+        transform: translateZ(0);      /* Force GPU compositing layer */
+        -webkit-transform: translateZ(0);
+    }
+}

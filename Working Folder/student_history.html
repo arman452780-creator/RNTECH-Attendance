@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Attendance Reports - RN-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="student_dashboard.css">
+    <link rel="stylesheet" href="student_reports.css">
+    <link rel="stylesheet" href="student_navbar.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <link rel="stylesheet" href="ui-popups.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Premium Header -->
+        <header class="reports-header">
+            <div class="reports-title-block">
+                <span class="reports-subtitle">Performance Analytics</span>
+                <h1 class="reports-title">My Reports</h1>
+            </div>
+            <div class="reports-status-badge" id="attendanceStatus">Excellent</div>
+        </header>
+
+        <main class="dashboard-content">
+            <!-- Performance Overview -->
+            <section class="performance-section">
+                <div class="overview-card">
+                    <div class="overview-chart-wrapper">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" id="attendanceWheel" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div class="overview-percentage">
+                            <span id="overallPct">0%</span>
+                        </div>
+                    </div>
+                    <div class="perf-info">
+                        <h3 class="perf-title">Total Consistency</h3>
+                        <p class="perf-desc">Tracking your presence across all classes.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Grid -->
+            <section class="stats-grid" style="margin-bottom: 25px;">
+                <div class="stat-card total-cls">
+                    <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-val" id="totalClasses">0</span>
+                        <span class="stat-label">Total Classes</span>
+                    </div>
+                </div>
+                <div class="stat-card present-cnt">
+                    <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-val" id="presentCount">0</span>
+                        <span class="stat-label">Present</span>
+                    </div>
+                </div>
+                <div class="stat-card absent-cnt">
+                    <div class="stat-icon"><i class="fa-solid fa-user-xmark"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-val" id="absentCount">0</span>
+                        <span class="stat-label">Absent</span>
+                    </div>
+                </div>
+                <div class="stat-card late-cnt">
+                    <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-val" id="lateCount">0</span>
+                        <span class="stat-label">Late</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Monthly Analytics Chart -->
+            <section class="section-group">
+                <div class="section-header">
+                    <h3 class="section-title">Attendance Trend</h3>
+                </div>
+                <div class="analytics-container">
+                    <canvas id="attendanceTrendChart"></canvas>
+                </div>
+            </section>
+
+            <!-- AI Insights & Streaks -->
+            <section class="section-group">
+                <div class="ai-insight-box">
+                    <div class="ai-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="insight-info">
+                        <span id="aiInsightText" class="insight-text">Analyzing your attendance patterns...</span>
+                    </div>
+                </div>
+
+                <div class="insight-grid">
+                    <div class="insight-card">
+                        <span class="stat-label">Current Streak</span>
+                        <span id="currentStreak" class="streak-val">0</span>
+                        <span class="insight-text">Consecutive Days</span>
+                    </div>
+                    <div class="insight-card">
+                        <span class="stat-label">Best Streak</span>
+                        <span id="bestStreak" class="streak-val">0</span>
+                        <span class="insight-text">Your Record</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Subject-wise Analytics -->
+            <section class="section-group">
+                <div class="section-header">
+                    <h3 class="section-title">Subject Performance</h3>
+                </div>
+                <div id="lowAttendanceWarnings"></div>
+                <div class="subject-grid" id="subjectAnalyticsList">
+                    <!-- Subject cards injected here -->
+                </div>
+            </section>
+
+            <!-- Monthly Breakdown -->
+            <section class="section-group">
+                <div class="section-header">
+                    <h3 class="section-title">Monthly Breakdown</h3>
+                </div>
+                <div class="monthly-grid" id="monthlyBreakdownList">
+                    <!-- Monthly items injected here -->
+                </div>
+            </section>
+
+            <!-- Recent Reports List -->
+            <section class="section-group">
+                <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: 15px;">
+                    <h3 class="section-title">Attendance History</h3>
+                    <div class="filter-row">
+                        <button class="filter-pill active" data-filter="all">All Time</button>
+                        <button class="filter-pill" data-filter="month">This Month</button>
+                        <button class="filter-pill" data-filter="week">This Week</button>
+                        <button class="filter-pill" data-filter="today">Today</button>
+                    </div>
+                </div>
+
+                <div class="history-container" id="historyList">
+                </div>
+            </section>
+
+
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="student_dashboard.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-house-chimney"></i></div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="student_timetable.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-calendar-days"></i></div>
+                    <span class="nav-label">Timetable</span>
+                </a>
+                <a href="student_history.html" class="nav-item active">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-chart-line"></i></div>
+                    <span class="nav-label">Reports</span>
+                </a>
+                <a href="student_profile.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-circle-user"></i></div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- Core Local-First Engine Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/render-engine.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/components/templates.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="student_reports.js"></script>
+</body>
+
+</html>

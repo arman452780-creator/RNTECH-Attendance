@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Weekly Timetable - RN-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="student_dashboard.css">
+    <link rel="stylesheet" href="student_navbar.css">
+    <style>
+        /* Specific tweaks for Timetable page */
+        .timetable-content {
+            padding: 0 20px 140px;
+        }
+
+        .day-section {
+            margin-bottom: 32px;
+        }
+
+        .day-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-main);
+            padding: 10px 0;
+            z-index: 10;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .day-name {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .day-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .timetable-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Override min-width for vertical list */
+        .timetable-list .class-card {
+            min-width: 100%;
+        }
+
+        .back-header {
+            padding: calc(20px + env(safe-area-inset-top)) 20px 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+    </style>
+    <link rel="stylesheet" href="global-theme.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Back Navigation -->
+        <header class="back-header">
+            <a href="student_dashboard.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="user-name">Full Timetable</h1>
+        </header>
+
+        <main class="dashboard-content timetable-content">
+            <!-- Global Announcement Container -->
+            <div id="globalAnnouncementCard"></div>
+            <div id="timetableContainer"></div>
+        </main>
+
+        <!-- Bottom Navbar (Injected or Static) -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="student_dashboard.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-house-chimney"></i></div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                <a href="student_timetable.html" class="nav-item active">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-calendar-days"></i></div>
+                    <span class="nav-label">Timetable</span>
+                </a>
+                <a href="student_history.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-chart-line"></i></div>
+                    <span class="nav-label">Reports</span>
+                </a>
+                <a href="student_profile.html" class="nav-item">
+                    <div class="nav-icon-wrapper"><i class="fa-solid fa-circle-user"></i></div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- Core Local-First Engine Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/render-engine.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/components/templates.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="js/core/global-holiday.js"></script>
+    <script src="student_timetable.js"></script>
+</body>
+
+</html>

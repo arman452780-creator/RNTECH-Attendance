@@ -1,0 +1,169 @@
+/* ui-popups.css - Premium RN-TECH Popup & Toast System */
+:root {
+    --popup-bg: rgba(15, 23, 42, 0.95);
+    --popup-border: rgba(255, 255, 255, 0.1);
+    --success-neon: #10b981;
+    --error-neon: #ef4444;
+    --warn-neon: #f59e0b;
+    --info-neon: #3b82f6;
+}
+
+/* Overlay & Container */
+#rn-popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000; /* Above everything */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+#rn-popup-container.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Modal Card */
+.rn-modal {
+    background: var(--popup-bg);
+    border: 1px solid var(--popup-border);
+    border-radius: 28px;
+    width: 100%;
+    max-width: 340px;
+    padding: 30px 24px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#rn-popup-container.active .rn-modal {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Icons & Visuals */
+.rn-popup-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+}
+
+.rn-popup-icon::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    opacity: 0.2;
+    animation: iconPulse 2s infinite;
+}
+
+@keyframes iconPulse {
+    0% { transform: scale(1); opacity: 0.2; }
+    50% { transform: scale(1.2); opacity: 0.1; }
+    100% { transform: scale(1); opacity: 0.2; }
+}
+
+.success-icon { background: rgba(16, 185, 129, 0.1); color: var(--success-neon); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+.error-icon { background: rgba(239, 68, 68, 0.1); color: var(--error-neon); box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+.warn-icon { background: rgba(245, 158, 11, 0.1); color: var(--warn-neon); box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
+
+/* Typography */
+.rn-popup-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.rn-popup-msg {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+/* Actions */
+.rn-popup-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.rn-btn {
+    flex: 1;
+    height: 48px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rn-btn-cancel { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); }
+.rn-btn-confirm { background: var(--accent-color); color: white; box-shadow: 0 4px 15px var(--accent-glow); }
+.rn-btn-danger { background: #ef4444; color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+
+.rn-btn:active { transform: scale(0.95); opacity: 0.9; }
+
+/* Toast System */
+#rn-toast-container {
+    position: fixed;
+    bottom: 100px; /* Above navbar */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10001;
+    pointer-events: none;
+    width: 90%;
+    max-width: 320px;
+}
+
+.rn-toast {
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    animation: toastSlideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.rn-toast-icon { font-size: 16px; }
+.rn-toast-msg { font-size: 13px; font-weight: 600; color: white; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes toastSlideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes toastSlideOut {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-20px); opacity: 0; }
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    #rn-toast-container { bottom: calc(100px + env(safe-area-inset-bottom)); }
+}

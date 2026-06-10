@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Dashboard - Assistant Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="teacher_dashboard.css">
+    <link rel="stylesheet" href="attendance.css"> <!-- Reusing bottom-nav styles -->
+    <link rel="stylesheet" href="global-theme.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Top Sticky Header -->
+        <header class="dashboard-header">
+            <div class="header-main">
+                <div class="user-greeting">
+                    <p class="greeting" id="greetingText">Good Morning,</p>
+                    <h1 class="user-name" id="teacherNameHeader">Assistant</h1>
+                </div>
+                <div class="app-brand dashboard-logo">
+                    <span class="brand-rn">RN-</span><span class="brand-tech">TECH</span>
+                </div>
+            </div>
+            <div class="header-date-row">
+                <p class="current-date" id="dashboardDate">Friday, May 8</p>
+            </div>
+        </header>
+
+        <!-- Scrollable Dashboard Content -->
+        <main class="dashboard-content" id="dashboardContent">
+
+            <!-- Quick Actions Section -->
+            <section class="section-group">
+                <h3 class="section-title">Quick Actions</h3>
+                <div class="actions-row">
+                    <a href="attendance.html" class="action-btn-card">
+                        <div class="action-icon att"><i class="fa-solid fa-clipboard-user"></i></div>
+                        <span>Mark Attendance</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Global Announcement Container -->
+            <div id="globalAnnouncementCard" style="display: none;"></div>
+
+            <!-- Today's Classes Section -->
+            <section class="section-group">
+                <div class="section-header">
+                    <h3 class="section-title">Today's Classes</h3>
+                </div>
+                <div class="classes-scroll-row" id="todayClassesRow">
+                    <!-- Dynamic classes will be loaded here -->
+                    <div class="no-classes-msg" id="noClassesMsg">
+                        <i class="fa-solid fa-calendar-day"></i>
+                        <p>No classes assigned.</p>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <div class="footer-spacer"></div>
+        </main>
+
+        <!-- Modern Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="assistant_dashboard.html" class="nav-item active">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-house-chimney"></i>
+                    </div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+
+                <a href="attendance.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                    </div>
+                    <span class="nav-label">Attendance</span>
+                </a>
+
+                <a href="assistant_profile.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- Core Local-First Engine Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/global-holiday.js"></script>
+    <script src="js/core/render-engine.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/components/templates.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="assistant_dashboard.js"></script>
+</body>
+
+</html>

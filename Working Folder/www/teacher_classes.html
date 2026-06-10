@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>All Classes - Teacher Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="attendance.css"> <!-- Reusing bottom-nav styles -->
+    <link rel="stylesheet" href="teacher_classes.css">
+    <link rel="stylesheet" href="global-theme.css">
+    <script src="theme-system.js"></script>
+    <script src="no-zoom.js"></script>
+    <link rel="stylesheet" href="smooth-scroll.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="classes-header">
+            <div class="header-top">
+                <h1 class="header-title">All Classes</h1>
+            </div>
+            <div class="search-bar-container">
+                <div class="search-input-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="classSearch" placeholder="Search classes...">
+                </div>
+                <button id="globalStatusBtn" class="fab-btn" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3);" onclick="window.openGlobalStatusModal()">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                </button>
+                <button id="addClassBtn" class="fab-btn" onclick="window.openClassModal('create')">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="classes-content" id="classesContent">
+            <!-- Loading State -->
+            <div id="classesLoader" class="loader-overlay">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Fetching classes...</span>
+            </div>
+
+            <!-- Global Announcement Container -->
+            <div id="globalAnnouncementCard"></div>
+
+            <!-- Classes Grid -->
+            <div class="classes-grid" id="classesGrid">
+                <!-- Class cards will be dynamically injected here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-icon"><i class="fa-solid fa-plus-circle"></i></div>
+                <h3>No Classes Found</h3>
+                <p>Click the <b>"+"</b> button above to create your first class batch!</p>
+            </div>
+
+            <div class="footer-spacer"></div>
+        </main>
+
+
+
+        <!-- Manage Classes Modal -->
+        <div id="classModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Create New Batch</h3>
+                    <button id="closeModal" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <form id="classForm" class="modal-form">
+                    <input type="hidden" id="editClassId">
+                    <div class="form-group">
+                        <label>Course Name</label>
+                        <input type="text" id="courseName" placeholder="E.G. ADCA" list="courseList" required oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase">
+                        <datalist id="courseList">
+                            <!-- Existing courses will be synced here -->
+                        </datalist>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" id="subjectName" placeholder="C++" oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase">
+                        </div>
+                        <div class="form-group">
+                            <label>Batch Name</label>
+                            <input type="text" id="batchName" placeholder="E.G. MORNING-A" required oninput="this.value=this.value.toUpperCase()" style="text-transform:uppercase">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Time</label>
+                            <input type="time" id="startTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label>End Time</label>
+                            <input type="time" id="endTime" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Class Type</label>
+                            <select id="classType">
+                                <option value="theory">Theory</option>
+                                <option value="lab">Lab</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Instructor Name</label>
+                            <input type="text" id="teacherName" placeholder="E.G. RN-TECH">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Select Recurring Day(s)</label>
+                        <div class="day-selector" id="daySelector">
+                            <label class="day-chip">
+                                <input type="checkbox" value="Mon">
+                                <span>Mon</span>
+                            </label>
+                            <label class="day-chip">
+                                <input type="checkbox" value="Tue">
+                                <span>Tue</span>
+                            </label>
+                            <label class="day-chip">
+                                <input type="checkbox" value="Wed">
+                                <span>Wed</span>
+                            </label>
+                            <label class="day-chip">
+                                <input type="checkbox" value="Thu">
+                                <span>Thu</span>
+                            </label>
+                            <label class="day-chip">
+                                <input type="checkbox" value="Fri">
+                                <span>Fri</span>
+                            </label>
+                            <label class="day-chip">
+                                <input type="checkbox" value="Sat">
+                                <span>Sat</span>
+                            </label>
+                            <label class="day-chip">
+                                <input type="checkbox" value="Sun">
+                                <span>Sun</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="saveClassBtn" class="submit-modal-btn">Save Class</button>
+                    <button type="button" id="deleteClassBtn" class="delete-modal-btn" style="display: none;">Delete Class</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Class Status Modal -->
+        <div id="statusModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Update Class Status</h3>
+                    <button id="closeStatusModal" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <form id="statusForm" class="modal-form">
+                    <input type="hidden" id="statusClassId">
+                    <div class="form-group">
+                        <label>Current Status</label>
+                        <select id="classStatusSelect" required>
+                            <option value="active">Active (Normal Class)</option>
+                            <option value="cancelled">Cancelled</option>
+                            <option value="holiday">Holiday</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div id="cancelReasonGroup" class="form-group" style="display: none;">
+                        <label>Cancel Reason (Optional)</label>
+                        <input type="text" id="cancelReasonInput" placeholder="E.g., Teacher absent">
+                    </div>
+
+                    <div id="holidayTitleGroup" class="form-group" style="display: none;">
+                        <label>Holiday Title (Optional)</label>
+                        <input type="text" id="holidayTitleInput" placeholder="E.g., Holi Festival">
+                    </div>
+
+                    <button type="submit" id="saveStatusBtn" class="submit-modal-btn">Update Status</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Global Status / Holiday Modal -->
+        <div id="globalStatusModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Set Global Status</h3>
+                    <button id="closeGlobalStatusModal" class="close-modal-btn" onclick="window.closeGlobalStatusModal()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <form id="globalStatusForm" class="modal-form">
+                    <div class="form-group">
+                        <label>Status Type</label>
+                        <select id="gsStatusType" required>
+                            <option value="holiday">Holiday</option>
+                            <option value="closed">Classes Closed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="gsTitle" placeholder="E.g. Holi Vacation" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Reason / Description</label>
+                        <input type="text" id="gsReason" placeholder="E.g. Due to celebration of Holi" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" id="gsStartDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" id="gsEndDate" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="saveGlobalStatusBtn" class="submit-modal-btn" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">Apply Global Status</button>
+                    <button type="button" id="restoreNormalBtn" class="delete-modal-btn" style="display: none; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">Restore Normal Classes</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteConfirmModal" class="modal-overlay">
+            <div class="modal-content confirm-modal" style="max-width: 320px; text-align: center; padding: 25px 20px;">
+                <div class="confirm-icon" style="font-size: 40px; color: var(--danger); margin-bottom: 15px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 style="margin-bottom: 10px; font-size: 20px;">Are you sure?</h3>
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px; line-height: 1.5;">
+                    You are about to permanently delete <strong><span id="deleteClassBatchDisplay"></span></strong> class.<br>
+                    This action cannot be undone.
+                </p>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" id="cancelDeleteBtn" class="submit-modal-btn" style="flex: 1; background: rgba(255,255,255,0.05); color: var(--text-dark); border: 1px solid rgba(255,255,255,0.1);">Cancel</button>
+                    <button type="button" id="confirmDeleteBtn" class="delete-modal-btn" style="flex: 1; display: block; margin-top: 0;">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <a href="teacher_dashboard.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-house-chimney"></i>
+                    </div>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+
+                <a href="attendance.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                    </div>
+                    <span class="nav-label">Attendance</span>
+                </a>
+
+                <a href="teacher_students.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-user-group"></i>
+                    </div>
+                    <span class="nav-label">Students</span>
+                </a>
+
+                <a href="reports.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <span class="nav-label">Reports</span>
+                </a>
+
+                <a href="teacher_profile.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <i class="fa-solid fa-circle-user"></i>
+                    </div>
+                    <span class="nav-label">Profile</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Firebase Scripts (Moved to Bottom for Reliability) -->
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-init.js"></script>
+    <!-- Core Local-First Engine Scripts -->
+    <script src="js/core/local-cache.js"></script>
+    <script src="js/core/render-engine.js"></script>
+    <script src="js/core/firebase-sync.js"></script>
+    <script src="js/components/templates.js"></script>
+    <script src="js/core/app-init.js"></script>
+    <script src="js/core/global-holiday.js"></script>
+    <script src="teacher_classes.js"></script>
+    <script>
+        console.log("FINAL FAILSAFE: All scripts loaded and parsed.");
+        if (typeof window.openClassModal === 'undefined') {
+            console.error("FAILSAFE ERROR: window.openClassModal is NOT defined! teacher_classes.js failed to initialize.");
+        }
+    </script>
+</body>
+
+</html>
